@@ -270,18 +270,18 @@ input[type=file]{ display:none; }
 const BACKEND_URL = "https://script.google.com/macros/s/AKfycbzeZaUXvfqsA1oVqwwnSxdn_JJrYnCJQ5-3vA0-TCJSjMZUP2tRMEl-PawqlxZ5opGbXg/exec";
 
 /* ---- category definitions (mirror the backend) ---- */
-const WEEK14_START = new Date(2026, 5, 14); // 14 Jun 2026, Sunday
+const WEEK14_START = new Date(2026, 5, 13); // Sat 13 Jun 2026 — weeks roll over on Saturdays
 const CATS = {
   newbee_doubles:  { label:'NEW BEE · Doubles',   type:'doubles', accent:'lime',
-                     day:'Tue', offset:2, time:'7:00 PM onwards', rule:'DUPR 3.050 & below', tierMax:3.050 },
+                     day:'Tue', offset:3, time:'7:00 PM onwards', rule:'DUPR 3.050 & below', tierMax:3.050, ex:'2.725' },
   mixed_doubles:   { label:'MIXED BEE · Doubles',  type:'mixed',   accent:'pink',
-                     day:'Tue', offset:2, time:'9:30 PM onwards', rule:'Open to all' },
+                     day:'Tue', offset:3, time:'9:30 PM onwards', rule:'Open to all', ex:'3.000' },
   stinger_doubles: { label:'STINGER BEE · Doubles',type:'doubles', accent:'cyan',
-                     day:'Wed', offset:3, time:'8:00 PM onwards', rule:'DUPR 3.051 & above', tierMin:3.051 },
+                     day:'Wed', offset:4, time:'8:00 PM onwards', rule:'DUPR 3.051 & above', tierMin:3.051, ex:'3.250' },
   newbee_singles:  { label:'NEW BEE · Singles',   type:'singles', accent:'lime',
-                     day:'Thu', offset:4, time:'7:00 PM onwards', rule:'DUPR 3.050 & below', tierMax:3.050 },
+                     day:'Thu', offset:5, time:'7:00 PM onwards', rule:'DUPR 3.050 & below', tierMax:3.050, ex:'2.725' },
   stinger_singles: { label:'STINGER BEE · Singles',type:'singles', accent:'cyan',
-                     day:'Thu', offset:4, time:'8:30 PM onwards', rule:'DUPR 3.051 & above', tierMin:3.051 },
+                     day:'Thu', offset:5, time:'8:30 PM onwards', rule:'DUPR 3.051 & above', tierMin:3.051, ex:'3.250' },
 };
 
 let WEEK = 14;
@@ -294,6 +294,22 @@ function dayDate(week, offset){
   const d = new Date(WEEK14_START);
   d.setDate(d.getDate() + (week-14)*7 + offset);
   return d.toLocaleDateString('en-GB',{ day:'numeric', month:'short', year:'numeric' });
+}
+
+/* Current time in Sri Lanka, so the lock behaves the same for every visitor
+   regardless of their device's own time zone. */
+function nowInColombo(){
+  return new Date(new Date().toLocaleString('en-US',{ timeZone:'Asia/Colombo' }));
+}
+/* The lock moment for a category: 4:30 PM on that category's event date. */
+function eventCutoff(week, offset){
+  const d = new Date(WEEK14_START);
+  d.setDate(d.getDate() + (week-14)*7 + offset);
+  d.setHours(16, 30, 0, 0);
+  return d;
+}
+function isLocked(c){
+  return nowInColombo().getTime() > eventCutoff(WEEK, c.offset).getTime();
 }
 
 /* ---- load slot counts on open ---- */
@@ -320,24 +336,26 @@ function renderCards(){
     const c = CATS[key];
     const s = slots[key] || { left:c_limit(key), limit:c_limit(key) };
     const left = s.left;
+    const locked = isLocked(c);
     const full = left <= 0;
-    const hurry = left > 0 && left <= 3;
+    const hurry = !locked && left > 0 && left <= 3;
 
     const card = document.createElement('div');
-    card.className = 'card' + (full ? ' full' : '');
+    card.className = 'card' + ((full || locked) ? ' full' : '');
     card.setAttribute('data-accent', c.accent);
     card.innerHTML = `
       <div class="bar"></div>
       <div class="cat">${c.label}</div>
       <div class="meta"><b>${c.day} · ${dayDate(WEEK,c.offset)}</b><br>${c.time}</div>
       <div class="rule">${c.rule}</div>
-      ${ full ? `<div class="full-msg">Sorry, no slots left! see you next week!</div>`
+      ${ locked ? `<div class="full-msg">See you next week!</div>`
+        : full ? `<div class="full-msg">Sorry, no slots left! see you next week!</div>`
               : `<div class="spots">
                    <div class="left"><b>${left}</b> ${s.limit && left===1?'spot':'spots'} left</div>
                    ${ hurry ? `<div class="hurry">Hurry! Only ${left} left</div>` : '' }
                  </div>` }
     `;
-    if(!full) card.onclick = ()=>openForm(key);
+    if(!full && !locked) card.onclick = ()=>openForm(key);
     grid.appendChild(card);
   });
 }
@@ -360,15 +378,16 @@ function openForm(key){
 function buildFields(c){
   const box = document.getElementById('formFields');
   const duprLabel = c.type==='singles' ? 'Singles DUPR Rating' : 'Doubles DUPR Rating';
+  const ex = c.ex || '3.000';
 
   let html = `
     <div class="field">
       <label>Your Name</label>
-      <input type="text" placeholder="e.g. Vibuda Jayathilake" oninput="setVal('name',this.value)">
+      <input type="text" placeholder="e.g. Vibuda Jayathilake" onkeydown="enterNext(event,this)" oninput="setVal('name',this.value)">
     </div>
     <div class="field">
       <label>${duprLabel}</label>
-      <input type="number" step="0.001" placeholder="e.g. 3.250" oninput="setVal('dupr',this.value)">
+      <input type="number" step="0.001" placeholder="e.g. ${ex}" onkeydown="enterNext(event,this)" oninput="setVal('dupr',this.value)">
     </div>
     <div class="field">
       <label>Gender</label>
@@ -382,7 +401,7 @@ function buildFields(c){
     html += `
     <div class="field">
       <label>Partner's Name</label>
-      <input type="text" placeholder="Partner full name" oninput="setVal('partnerName',this.value)">
+      <input type="text" placeholder="Partner full name" onkeydown="enterNext(event,this)" oninput="setVal('partnerName',this.value)">
     </div>
     <div class="field">
       <label>Partner's Gender</label>
@@ -393,7 +412,7 @@ function buildFields(c){
     </div>
     <div class="field">
       <label>Partner's DUPR Rating <span class="opt">(optional)</span></label>
-      <input type="number" step="0.001" placeholder="Leave blank if unknown" oninput="setVal('partnerDupr',this.value)">
+      <input type="number" step="0.001" placeholder="Leave blank if unknown" onkeydown="enterNext(event,this)" oninput="setVal('partnerDupr',this.value)">
     </div>
     <div class="field">
       <label>Payment</label>
@@ -419,6 +438,17 @@ function buildFields(c){
 
 /* ---- field handlers ---- */
 function setVal(k,v){ form[k]=v; validate(); }
+
+/* Pressing Enter jumps to the next text/number field in the form. */
+function enterNext(event, el){
+  if(event.key !== 'Enter') return;
+  event.preventDefault();
+  const inputs = Array.from(document.querySelectorAll(
+    '#formFields input[type=text], #formFields input[type=number]'));
+  const i = inputs.indexOf(el);
+  if(i > -1 && i < inputs.length - 1) inputs[i+1].focus();
+  else el.blur();
+}
 function pick(btn,k,v){
   btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
