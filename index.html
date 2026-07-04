@@ -329,11 +329,11 @@ function renderLeaderboard(data){
     <div class="lbmeta">Season 2 · Week ${WEEK} Standings</div>
     <div class="lb-cols">
       <div class="lb-col">
-        <h3 class="girls">Girls — Top 12</h3>
+        <h3 class="girls">Queens — Top 12</h3>
         ${data.girls.length?'<ul class="lb-list">'+listHtml(data.girls)+'</ul>':'<div class="lb-empty">No rankings yet.</div>'}
       </div>
       <div class="lb-col">
-        <h3 class="boys">Boys — Top 36</h3>
+        <h3 class="boys">Kings — Top 36</h3>
         ${data.boys.length?'<ul class="lb-list">'+listHtml(data.boys)+'</ul>':'<div class="lb-empty">No rankings yet.</div>'}
       </div>
     </div>
