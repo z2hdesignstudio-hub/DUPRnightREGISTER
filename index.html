@@ -89,6 +89,10 @@ h1 .hl{color:var(--pink);}
   min-width:26px;text-align:right;font-size:.85rem;}
 .lb-rank.gold{color:#d4a017;} .lb-rank.silver{color:#8a8a8a;} .lb-rank.bronze{color:#b97b4a;}
 .lb-empty{color:var(--muted);font-weight:700;font-size:.92rem;padding:12px 0;font-style:italic;}
+.lb-pause-msg{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;
+  color:var(--orange);text-align:center;padding:18px 0;line-height:1.5;
+  animation:fadepulse 2s ease-in-out infinite;}
+@keyframes fadepulse{0%,100%{opacity:1;}50%{opacity:.5;}}
 
 /* form */
 .panel{background:var(--surface);border-radius:var(--r);box-shadow:var(--clay);padding:28px 24px;margin-top:8px;}
@@ -313,6 +317,15 @@ function c_limit(key){ return ({mixed_doubles:6}[key])||12; }
 /* ---- render leaderboard card ---- */
 function renderLeaderboard(data){
   const sec = document.getElementById('leaderboardSection');
+  // When the admin has paused publishing, show the holding message instead of rankings
+  if(data && data.paused){
+    sec.innerHTML = `<div class="lb-card">
+      <h2>HIVE Rankings</h2>
+      <div class="lbmeta">Season 2 · Week ${WEEK} Standings</div>
+      <div class="lb-pause-msg">Please hang tight, we are currently updating your rankings!</div>
+    </div>`;
+    return;
+  }
   if(!data || (!data.girls.length && !data.boys.length)){
     sec.innerHTML = `<div class="lb-card">
       <h2>HIVE Rankings</h2>
