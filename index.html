@@ -72,8 +72,40 @@ h1 .hl{color:var(--pink);}
   border-radius:var(--r-sm);padding:12px 14px;text-align:center;font-weight:700;color:var(--muted);font-size:.92rem;}
 
 /* leaderboard card */
-.lb-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--clay);
-  padding:24px 22px;margin-top:28px;border-top:7px solid var(--lime);}
+.lb-card{background:var(--surface);border-radius:var(--r);
+  padding:24px 22px;margin-top:28px;position:relative;
+  /* Breathing glow using box-shadow animation */
+  animation:lbBreath 3.5s ease-in-out infinite;}
+/* Gradient border via pseudo-element so it animates independently */
+.lb-card::before{
+  content:'';position:absolute;inset:-3px;border-radius:calc(var(--r) + 3px);
+  background:linear-gradient(135deg,#6a00f4,#0d0d6b,#9c00e4,#1a0066,#7f00ff,#000080);
+  background-size:300% 300%;
+  animation:lbShift 4s ease-in-out infinite,lbStrobe 2.8s ease-in-out infinite;
+  z-index:0;
+}
+/* Solid white fill so the pseudo-element only shows as a border */
+.lb-card::after{
+  content:'';position:absolute;inset:0;border-radius:var(--r);
+  background:var(--surface);z-index:1;
+}
+/* All content sits above the border layers */
+.lb-card>*{position:relative;z-index:2;}
+
+@keyframes lbShift{
+  0%,100%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+}
+@keyframes lbStrobe{
+  0%,100%{opacity:1;}
+  45%{opacity:.65;}
+  50%{opacity:.5;}
+  55%{opacity:.65;}
+}
+@keyframes lbBreath{
+  0%,100%{box-shadow:0 0 0 0 transparent,var(--clay);}
+  50%{box-shadow:0 0 28px 6px rgba(106,0,244,.28),var(--clay);}
+}
 .lb-card h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.5rem;margin-bottom:4px;}
 .lb-card .lbmeta{color:var(--muted);font-weight:700;font-size:.88rem;margin-bottom:18px;}
 .lb-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
@@ -233,6 +265,13 @@ const CATS = {
 };
 
 let WEEK = 14;
+
+// Computes the current DUPR week directly from the clock.
+// Used by the leaderboard subtitle so it's accurate even when
+// loadLeaderboard() resolves before loadSlots() sets WEEK.
+function lbWeek(){
+  return 14+Math.floor((Date.now()-WEEK14_START.getTime())/(7*24*60*60*1000));
+}
 let slots = {};
 let current = null;
 const form = {};
@@ -321,7 +360,7 @@ function renderLeaderboard(data){
   if(data && data.paused){
     sec.innerHTML = `<div class="lb-card">
       <h2>HIVE Rankings</h2>
-      <div class="lbmeta">Season 2 · Week ${WEEK} Standings</div>
+      <div class="lbmeta">Standings as of Week ${lbWeek()}</div>
       <div class="lb-pause-msg">Please hang tight, we are currently updating your rankings!</div>
     </div>`;
     return;
@@ -329,7 +368,7 @@ function renderLeaderboard(data){
   if(!data || (!data.girls.length && !data.boys.length)){
     sec.innerHTML = `<div class="lb-card">
       <h2>HIVE Rankings</h2>
-      <div class="lbmeta">Season 2 · Week ${WEEK} Standings</div>
+      <div class="lbmeta">Standings as of Week ${lbWeek()}</div>
       <div class="lb-empty">Rankings will appear once the season gets underway.</div>
     </div>`;
     return;
@@ -339,7 +378,7 @@ function renderLeaderboard(data){
     <li><span class="lb-rank ${rankIcon(i+1)}">${i+1}</span>${p.name}</li>`).join('');
   sec.innerHTML = `<div class="lb-card">
     <h2>HIVE Rankings</h2>
-    <div class="lbmeta">Season 2 · Week ${WEEK} Standings</div>
+    <div class="lbmeta">Standings as of Week ${lbWeek()}</div>
     <div class="lb-cols">
       <div class="lb-col">
         <h3 class="girls">Queens — Top 12</h3>
