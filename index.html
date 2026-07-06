@@ -72,6 +72,40 @@ h1 .hl{color:var(--pink);}
   border-radius:var(--r-sm);padding:12px 14px;text-align:center;font-weight:700;color:var(--muted);font-size:.92rem;}
 
 /* ─── LEADERBOARD — SHARED ─────────────────────────────── */
+/* Card base — animated purple/navy gradient border + breathing glow */
+.lb-card{
+  background:var(--surface);border-radius:var(--r);
+  padding:24px 22px;margin-top:28px;
+  position:relative;cursor:pointer;
+  animation:lbBreath 3.5s ease-in-out infinite;
+}
+/* Gradient border ring via pseudo-element */
+.lb-card::before{
+  content:'';position:absolute;inset:-3px;
+  border-radius:calc(var(--r) + 3px);
+  background:linear-gradient(135deg,#6a00f4,#0d0d6b,#9c00e4,#1a0066,#7f00ff,#000080);
+  background-size:300% 300%;
+  animation:lbShift 4s ease-in-out infinite,lbStrobe 2.8s ease-in-out infinite;
+  z-index:0;
+}
+/* Solid surface fill so only the 3px rim shows as the border */
+.lb-card::after{
+  content:'';position:absolute;inset:0;
+  border-radius:var(--r);background:var(--surface);z-index:1;
+}
+/* All card children sit above the border layers */
+.lb-card>*{position:relative;z-index:2;}
+@keyframes lbShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+@keyframes lbStrobe{
+  0%,100%{opacity:1;}45%{opacity:.65;}50%{opacity:.5;}55%{opacity:.65;}
+}
+@keyframes lbBreath{
+  0%,100%{box-shadow:0 0 0 0 transparent,var(--clay);}
+  50%{box-shadow:0 0 28px 6px rgba(106,0,244,.28),var(--clay);}
+}
+/* Desktop-only content inside paused/empty card (hidden on mobile, shown in drawer) */
+.lb-state-desktop{}
+@media(max-width:768px){.lb-state-desktop{display:none;}}
 .lb-card h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.5rem;margin-bottom:4px;}
 .lb-card .lbmeta{color:var(--muted);font-weight:700;font-size:.88rem;margin-bottom:18px;}
 .lb-rank{font-family:'Fredoka',sans-serif;font-weight:600;color:var(--muted);
@@ -425,20 +459,32 @@ function renderLeaderboard(data){
 
   // ── Paused ──
   if(data && data.paused){
-    sec.innerHTML = `<div class="lb-card">
+    const msg=`<div class="lb-pause-msg">Please hang tight, we are currently updating your rankings!</div>`;
+    const drawerBody=document.getElementById('lbDrawerBody');
+    if(drawerBody) drawerBody.innerHTML=
+      `<div style="margin-bottom:14px;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.1rem;">
+         Standings as of Week ${lbWeek()}</div>${msg}`;
+    sec.innerHTML=`<div class="lb-card" id="lbCardEl" onclick="lbCardTap()">
       <h2>HIVE Rankings</h2>
       <div class="lbmeta">Standings as of Week ${lbWeek()}</div>
-      <div class="lb-pause-msg">Please hang tight, we are currently updating your rankings!</div>
+      <div class="lb-state-desktop">${msg}</div>
+      <div class="lb-tap-hint">Tap for updates <span class="tap-arr">&#8250;</span></div>
     </div>`;
     return;
   }
 
   // ── Empty / no data ──
   if(!data || (!data.girls.length && !data.boys.length)){
-    sec.innerHTML = `<div class="lb-card">
+    const msg=`<div class="lb-empty">Rankings will appear once the season gets underway.</div>`;
+    const drawerBody=document.getElementById('lbDrawerBody');
+    if(drawerBody) drawerBody.innerHTML=
+      `<div style="margin-bottom:14px;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.1rem;">
+         Standings as of Week ${lbWeek()}</div>${msg}`;
+    sec.innerHTML=`<div class="lb-card" id="lbCardEl" onclick="lbCardTap()">
       <h2>HIVE Rankings</h2>
       <div class="lbmeta">Standings as of Week ${lbWeek()}</div>
-      <div class="lb-empty">Rankings will appear once the season gets underway.</div>
+      <div class="lb-state-desktop">${msg}</div>
+      <div class="lb-tap-hint">Tap to view rankings <span class="tap-arr">&#8250;</span></div>
     </div>`;
     return;
   }
