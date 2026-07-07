@@ -71,163 +71,82 @@ h1 .hl{color:var(--pink);}
 .full-msg{margin-top:16px;background:var(--surface-2);box-shadow:var(--clay-in);
   border-radius:var(--r-sm);padding:12px 14px;text-align:center;font-weight:700;color:var(--muted);font-size:.92rem;}
 
-/* ─── LEADERBOARD — SHARED ─────────────────────────────── */
-/* Card base — animated purple/navy gradient border + breathing glow */
+/* ═══ HIVE RANKINGS NAV BAR (fixed bottom — PC + Mobile) ═══ */
+
+/* Always fixed at the bottom regardless of viewport */
+#leaderboardSection{position:fixed;bottom:0;left:0;right:0;z-index:85;padding:0;}
+body{padding-bottom:66px;}
+
+/* ── Nav bar ── */
 .lb-card{
-  background:var(--surface);border-radius:var(--r);
-  padding:24px 22px;margin-top:28px;
-  position:relative;cursor:pointer;
+  position:relative;cursor:pointer;margin:0;
+  background:var(--surface);height:62px;
+  display:flex;align-items:stretch;overflow:visible;
   animation:lbBreath 3.5s ease-in-out infinite;
 }
-/* Gradient border ring via pseudo-element */
+/* Animated purple/navy gradient strip along the top edge */
 .lb-card::before{
-  content:'';position:absolute;inset:-3px;
-  border-radius:calc(var(--r) + 3px);
-  background:linear-gradient(135deg,#6a00f4,#0d0d6b,#9c00e4,#1a0066,#7f00ff,#000080);
-  background-size:300% 300%;
+  content:'';position:absolute;top:-4px;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,#6a00f4,#0d0d6b,#9c00e4,#1a0066,#7f00ff,#000080,#6a00f4);
+  background-size:300% 100%;
   animation:lbShift 4s ease-in-out infinite,lbStrobe 2.8s ease-in-out infinite;
-  z-index:0;
+  border-radius:3px 3px 0 0;
 }
-/* Solid surface fill so only the 3px rim shows as the border */
+/* Subtle depth overlay */
 .lb-card::after{
-  content:'';position:absolute;inset:0;
-  border-radius:var(--r);background:var(--surface);z-index:1;
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(106,0,244,.05) 0%,transparent 55%);
 }
-/* All card children sit above the border layers */
 .lb-card>*{position:relative;z-index:2;}
-@keyframes lbShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+
+@keyframes lbShift{
+  0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}
+}
 @keyframes lbStrobe{
   0%,100%{opacity:1;}45%{opacity:.65;}50%{opacity:.5;}55%{opacity:.65;}
 }
 @keyframes lbBreath{
-  0%,100%{box-shadow:0 0 0 0 transparent,var(--clay);}
-  50%{box-shadow:0 0 28px 6px rgba(106,0,244,.28),var(--clay);}
+  0%,100%{box-shadow:0 -4px 15px rgba(106,0,244,.18),0 -2px 8px rgba(0,0,80,.12);}
+  50%{box-shadow:0 -10px 32px rgba(106,0,244,.45),0 -5px 18px rgba(0,0,80,.28);}
 }
-/* Desktop-only content inside paused/empty card (hidden on mobile, shown in drawer) */
-.lb-bar-row{display:none;} /* shown only in the mobile floating bar */
-.lb-state-desktop{flex:1;display:flex;align-items:center;justify-content:center;padding:8px 0;}
-@media(max-width:768px){.lb-state-desktop{display:none;}}
-.lb-card h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.5rem;margin-bottom:4px;}
-.lb-card .lbmeta{color:var(--muted);font-weight:700;font-size:.88rem;margin-bottom:18px;}
-.lb-rank{font-family:'Fredoka',sans-serif;font-weight:600;color:var(--muted);
-  min-width:26px;text-align:right;font-size:.85rem;}
-.lb-rank.gold{color:#d4a017;}.lb-rank.silver{color:#8a8a8a;}.lb-rank.bronze{color:#b97b4a;}
+@keyframes fadepulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+@keyframes ctaPulse{
+  0%,100%{transform:scale(1);}50%{transform:scale(1.04);}
+}
+
+/* ── Nav layout (same on PC + mobile) ── */
+.lb-nav-left{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 20px;min-width:155px;border-right:1px solid var(--surface-2);
+}
+.lb-nav-title{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.95rem;color:var(--ink);}
+.lb-nav-sub{font-size:.68rem;color:var(--muted);font-weight:700;}
+.lb-nav-right{flex:1;display:flex;align-items:center;justify-content:center;
+  padding:0 16px;text-align:center;}
+.lb-nav-pause{font-family:'Nunito',sans-serif;font-weight:800;font-size:.78rem;
+  color:var(--orange);animation:fadepulse 2s ease-in-out infinite;line-height:1.35;}
+.lb-nav-cta{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1rem;color:#7f00ff;
+  animation:ctaPulse 2.2s ease-in-out infinite;letter-spacing:.02em;}
+.lb-nav-empty{font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;
+  color:var(--muted);font-style:italic;}
+
+/* ── Drawer content ── */
+.lb-pause-msg{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;
+  color:var(--orange);text-align:center;padding:18px 0;line-height:1.5;
+  animation:fadepulse 2s ease-in-out infinite;}
+.lb-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:560px){.lb-cols{grid-template-columns:1fr;}}
+.lb-col h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;
+  margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--surface-2);}
+.lb-col h3.girls{color:var(--pink);}.lb-col h3.boys{color:var(--cyan);}
 .lb-list{list-style:none;}
 .lb-list li{display:flex;gap:10px;align-items:center;padding:7px 0;
   border-bottom:1px solid var(--surface-2);font-weight:700;font-size:.95rem;}
 .lb-list li:last-child{border-bottom:none;}
+.lb-rank{font-family:'Fredoka',sans-serif;font-weight:600;color:var(--muted);
+  min-width:26px;text-align:right;font-size:.85rem;}
+.lb-rank.gold{color:#d4a017;}.lb-rank.silver{color:#8a8a8a;}.lb-rank.bronze{color:#b97b4a;}
 .lb-empty{color:var(--muted);font-weight:700;font-size:.92rem;padding:12px 0;font-style:italic;}
-.lb-pause-msg{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;
-  color:var(--orange);text-align:center;padding:18px 0;line-height:1.5;
-  animation:fadepulse 2s ease-in-out infinite;}
-@keyframes fadepulse{0%,100%{opacity:1;}50%{opacity:.5;}}
-
-/* ─── DESKTOP — overlay reveal ─────────────────────────── */
-.lb-card{cursor:pointer;display:flex;flex-direction:column;min-height:150px;}
-/* Wrap that holds the blurred content + the CTA overlay */
-.lb-reveal-wrap{position:relative;border-radius:calc(var(--r) - 4px);overflow:hidden;}
-/* Rankings list shown blurred behind the overlay */
-.lb-content-blur{
-  filter:blur(6px);
-  transform:scale(1.02); /* fills edges after blur */
-  transition:filter .45s ease,transform .45s ease;
-  pointer-events:none;user-select:none;
-}
-.lb-card.revealed .lb-content-blur{filter:none;transform:scale(1);pointer-events:auto;user-select:auto;}
-/* Translucent overlay with the CTA */
-.lb-cta-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(160deg,rgba(40,0,100,.55),rgba(0,0,60,.45));
-  backdrop-filter:blur(2px);
-  display:flex;align-items:center;justify-content:center;
-  border-radius:inherit;
-  transition:opacity .45s ease;
-}
-.lb-card.revealed .lb-cta-overlay{opacity:0;pointer-events:none;}
-.lb-cta-pill{
-  font-family:'Fredoka',sans-serif;font-weight:700;
-  font-size:clamp(1rem,2.5vw,1.35rem);
-  color:#fff;text-align:center;
-  padding:16px 28px;line-height:1.35;
-  background:rgba(106,0,244,.35);
-  border:2px solid rgba(200,100,255,.55);
-  border-radius:18px;
-  backdrop-filter:blur(6px);
-  letter-spacing:.04em;
-  text-shadow:0 0 18px rgba(200,100,255,.9);
-  animation:ctaPulse 2.2s ease-in-out infinite;
-  max-width:85%;
-}
-@keyframes ctaPulse{
-  0%,100%{transform:scale(1);box-shadow:0 0 16px rgba(106,0,244,.4);}
-  50%{transform:scale(1.04);box-shadow:0 0 36px rgba(106,0,244,.75);}
-}
-/* Two-column grid for desktop */
-.lb-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-.lb-col h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;
-  margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--surface-2);}
-.lb-col h3.girls{color:var(--pink);}.lb-col h3.boys{color:var(--cyan);}
-
-/* ─── MOBILE — HIVE Rankings nav bar (same style as Website 2 bottom nav) ─── */
-@media(max-width:768px){
-  /* Edge-to-edge fixed bar, no padding so it spans full width */
-  #leaderboardSection{position:fixed;bottom:0;left:0;right:0;z-index:85;padding:0;}
-  body{padding-bottom:66px;}
-
-  /* Nav bar surface — suppress the animated gradient border, use flat nav style */
-  .lb-card::before,.lb-card::after{display:none;}
-  .lb-card{
-    margin:0;padding:0;border-radius:0;min-height:unset;
-    display:block;animation:none;
-    background:var(--surface);
-    box-shadow:0 -4px 20px rgba(60,80,55,.15);
-    border-top:2px solid var(--surface-2);
-  }
-
-  /* Hide desktop-only content */
-  .lb-card>h2{display:none;}
-  .lb-card>.lbmeta{display:none;}
-  .lb-state-desktop{display:none !important;}
-  .lb-reveal-wrap{display:none !important;}
-
-  /* Bar row — identical layout to Website 2's .floatnav */
-  .lb-bar-row{
-    display:flex;align-items:stretch;height:62px;
-  }
-  /* Left cell: brand name + subtitle */
-  .lb-bar-brand{
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    padding:0 14px;min-width:140px;
-    border-right:1px solid var(--surface-2);
-  }
-  .lb-bar-brand .lb-bar-title{
-    font-family:'Fredoka',sans-serif;font-weight:600;font-size:.92rem;color:var(--ink);
-  }
-  .lb-bar-brand .lb-bar-sub{
-    font-size:.65rem;color:var(--muted);font-weight:700;
-  }
-  /* Right cell: status / CTA */
-  .lb-bar-pause-msg{
-    flex:1;display:flex;align-items:center;justify-content:center;
-    padding:0 12px;text-align:center;
-    font-family:'Nunito',sans-serif;font-weight:800;font-size:.72rem;
-    color:var(--orange);line-height:1.35;
-    animation:fadepulse 2s ease-in-out infinite;
-  }
-  .lb-bar-cta{
-    flex:1;display:flex;align-items:center;justify-content:center;
-    padding:0 12px;text-align:center;
-    font-family:'Fredoka',sans-serif;font-weight:700;font-size:.88rem;
-    color:#7f00ff;
-    animation:ctaPulse 2.2s ease-in-out infinite;
-  }
-  .lb-bar-empty{
-    flex:1;display:flex;align-items:center;justify-content:center;
-    padding:0 12px;text-align:center;
-    font-family:'Nunito',sans-serif;font-weight:700;font-size:.75rem;
-    color:var(--muted);font-style:italic;
-  }
-}
 
 /* Bottom drawer (hidden until open) */
 .lb-drawer-overlay{
@@ -493,114 +412,49 @@ function renderCards(){
 }
 function c_limit(key){ return ({mixed_doubles:6}[key])||12; }
 
-let _lbRevealed = false; // desktop: tracks whether rankings are currently shown
+/* ── Leaderboard nav bar JS ── */
 
-/* ---- render leaderboard card ---- */
 function renderLeaderboard(data){
-  const sec = document.getElementById('leaderboardSection');
+  const sec=document.getElementById('leaderboardSection');
+  const wk=lbWeek();
+  let rightHtml, drawerContent;
 
-  // ── Paused ──
-  if(data && data.paused){
-    const msg=`<div class="lb-pause-msg">Please hang tight, we are currently updating your rankings!</div>`;
-    const drawerBody=document.getElementById('lbDrawerBody');
-    if(drawerBody) drawerBody.innerHTML=
-      `<div style="margin-bottom:14px;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.1rem;">
-         Standings as of Week ${lbWeek()}</div>${msg}`;
-    sec.innerHTML=`<div class="lb-card" id="lbCardEl" onclick="lbCardTap()">
-      <h2>HIVE Rankings</h2>
-      <div class="lbmeta">Standings as of Week ${lbWeek()}</div>
-      <div class="lb-state-desktop">${msg}</div>
-      <div class="lb-bar-row">
-        <div class="lb-bar-brand">
-          <div class="lb-bar-title">HIVE Rankings</div>
-          <div class="lb-bar-sub">Standings as of Week ${lbWeek()}</div>
-        </div>
-        <div class="lb-bar-pause-msg">Please hang tight, we are currently updating your rankings!</div>
-      </div>
-    </div>`;
-    return;
-  }
-
-  // ── Empty / no data ──
-  if(!data || (!data.girls.length && !data.boys.length)){
-    const msg=`<div class="lb-empty">Rankings will appear once the season gets underway.</div>`;
-    const drawerBody=document.getElementById('lbDrawerBody');
-    if(drawerBody) drawerBody.innerHTML=
-      `<div style="margin-bottom:14px;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.1rem;">
-         Standings as of Week ${lbWeek()}</div>${msg}`;
-    sec.innerHTML=`<div class="lb-card" id="lbCardEl" onclick="lbCardTap()">
-      <h2>HIVE Rankings</h2>
-      <div class="lbmeta">Standings as of Week ${lbWeek()}</div>
-      <div class="lb-state-desktop">${msg}</div>
-      <div class="lb-bar-row">
-        <div class="lb-bar-brand">
-          <div class="lb-bar-title">HIVE Rankings</div>
-          <div class="lb-bar-sub">Standings as of Week ${lbWeek()}</div>
-        </div>
-        <div class="lb-bar-empty">Rankings coming soon</div>
-      </div>
-    </div>`;
-    return;
-  }
-
-  // ── Build rankings HTML (shared for desktop reveal + mobile drawer) ──
-  const rankIcon = n => n===1?'gold':n===2?'silver':n===3?'bronze':'';
-  const listHtml = (players) => players.map((p,i)=>
-    `<li><span class="lb-rank ${rankIcon(i+1)}">${i+1}</span>${p.name}</li>`).join('');
-  const rankingsHtml = `
-    <div class="lb-cols">
-      <div class="lb-col">
-        <h3 class="girls">Queens — Top 12</h3>
-        ${data.girls.length?'<ul class="lb-list">'+listHtml(data.girls)+'</ul>':'<div class="lb-empty">No rankings yet.</div>'}
-      </div>
-      <div class="lb-col">
-        <h3 class="boys">Kings — Top 36</h3>
-        ${data.boys.length?'<ul class="lb-list">'+listHtml(data.boys)+'</ul>':'<div class="lb-empty">No rankings yet.</div>'}
-      </div>
-    </div>`;
-
-  // ── Desktop card: blurred content + CTA overlay ──
-  _lbRevealed = false;
-  sec.innerHTML = `<div class="lb-card lb-card-interactive" id="lbCardEl" onclick="lbCardTap()">
-    <h2>HIVE Rankings</h2>
-    <div class="lbmeta">Standings as of Week ${lbWeek()}</div>
-    <div class="lb-reveal-wrap">
-      <div class="lb-content-blur">${rankingsHtml}</div>
-      <div class="lb-cta-overlay">
-        <div class="lb-cta-pill">CLICK HERE TO VIEW YOUR RANK!</div>
-      </div>
-    </div>
-    <div class="lb-bar-row">
-    <div class="lb-bar-brand">
-      <div class="lb-bar-title">HIVE Rankings</div>
-      <div class="lb-bar-sub">Standings as of Week ${lbWeek()}</div>
-    </div>
-    <div class="lb-bar-cta">CLICK HERE TO VIEW YOUR RANK!</div>
-  </div>
-  </div>`;
-
-  // ── Populate the mobile drawer with the same rankings ──
-  const drawerBody = document.getElementById('lbDrawerBody');
-  if(drawerBody) drawerBody.innerHTML = `
-    <div style="margin-bottom:14px;">
-      <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.1rem;">
-        Standings as of Week ${lbWeek()}</div>
-    </div>
-    ${rankingsHtml}`;
-}
-
-/* ── Card tap: desktop = toggle reveal, mobile = open drawer ── */
-function lbCardTap(){
-  if(window.innerWidth <= 768){
-    openLbDrawer();
+  if(data&&data.paused){
+    rightHtml=`<div class="lb-nav-right lb-nav-pause">Please hang tight, we are currently updating your rankings!</div>`;
+    drawerContent=`<div class="lb-pause-msg">Please hang tight, we are currently updating your rankings!</div>`;
+  }else if(!data||(!data.girls.length&&!data.boys.length)){
+    rightHtml=`<div class="lb-nav-right lb-nav-empty">Rankings coming soon</div>`;
+    drawerContent=`<div class="lb-empty">Rankings will appear once the season gets underway.</div>`;
   }else{
-    _lbRevealed = !_lbRevealed;
-    const card = document.getElementById('lbCardEl');
-    if(card) card.classList.toggle('revealed', _lbRevealed);
+    rightHtml=`<div class="lb-nav-right lb-nav-cta">CLICK HERE TO VIEW YOUR RANK!</div>`;
+    const ri=n=>n===1?'gold':n===2?'silver':n===3?'bronze':'';
+    const li=players=>players.map((p,i)=>
+      `<li><span class="lb-rank ${ri(i+1)}">${i+1}</span>${p.name}</li>`).join('');
+    drawerContent=`<div class="lb-cols">
+      <div class="lb-col"><h3 class="girls">Queens — Top 12</h3>
+        ${data.girls.length?'<ul class="lb-list">'+li(data.girls)+'</ul>':'<div class="lb-empty">No rankings yet.</div>'}
+      </div>
+      <div class="lb-col"><h3 class="boys">Kings — Top 36</h3>
+        ${data.boys.length?'<ul class="lb-list">'+li(data.boys)+'</ul>':'<div class="lb-empty">No rankings yet.</div>'}
+      </div>
+    </div>`;
   }
+
+  // Populate drawer
+  const db=document.getElementById('lbDrawerBody');
+  if(db) db.innerHTML=`<div style="margin-bottom:14px;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.1rem;">Standings as of Week ${wk}</div>${drawerContent}`;
+
+  // Render nav bar (identical for PC and mobile)
+  sec.innerHTML=`<div class="lb-card" id="lbCardEl" onclick="openLbDrawer()">
+    <div class="lb-nav-left">
+      <div class="lb-nav-title">HIVE Rankings</div>
+      <div class="lb-nav-sub">Standings as of Week ${wk}</div>
+    </div>
+    ${rightHtml}
+  </div>`;
 }
 
-/* ── Mobile drawer ── */
+
 function openLbDrawer(){
   document.getElementById('lbDrawer').classList.add('open');
   document.getElementById('lbDrawerOverlay').classList.add('show');
