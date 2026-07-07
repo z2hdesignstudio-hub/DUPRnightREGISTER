@@ -79,6 +79,9 @@ h1 .hl{color:var(--pink);}
   background:var(--surface);border-radius:var(--r);
   padding:24px 22px;margin-bottom:24px;
   position:relative;cursor:pointer;
+  /* Flex column: centers title + subtitle + message as one group vertically */
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;min-height:160px;
   animation:lbBreath 3.5s ease-in-out infinite;
 }
 .lb-card::before{
@@ -100,19 +103,14 @@ h1 .hl{color:var(--pink);}
   50%{box-shadow:0 0 28px 6px rgba(106,0,244,.28),var(--clay);}
 }
 .lb-card h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.5rem;margin-bottom:4px;}
-.lb-card .lbmeta{color:var(--muted);font-weight:700;font-size:.88rem;margin-bottom:18px;}
-.lb-reveal-wrap{position:relative;border-radius:calc(var(--r) - 4px);overflow:hidden;}
-.lb-content-blur{filter:blur(6px);transform:scale(1.02);pointer-events:none;user-select:none;}
-.lb-cta-overlay{position:absolute;inset:0;
-  background:linear-gradient(160deg,rgba(40,0,100,.55),rgba(0,0,60,.45));
-  backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;
-  border-radius:inherit;}
+.lb-card .lbmeta{color:var(--muted);font-weight:700;font-size:.88rem;margin-bottom:16px;}
+/* Purple CTA pill — standalone inside the card, no overlay needed */
 .lb-cta-pill{font-family:'Fredoka',sans-serif;font-weight:700;
-  font-size:clamp(1rem,2.5vw,1.35rem);color:#fff;text-align:center;
-  padding:16px 28px;background:rgba(106,0,244,.35);
-  border:2px solid rgba(200,100,255,.55);border-radius:18px;
-  backdrop-filter:blur(6px);letter-spacing:.04em;
-  text-shadow:0 0 18px rgba(200,100,255,.9);
+  font-size:1.05rem;color:#fff;text-align:center;
+  padding:14px 28px;
+  background:linear-gradient(135deg,rgba(106,0,244,.85),rgba(0,0,100,.7));
+  border:2px solid rgba(200,100,255,.65);border-radius:18px;
+  letter-spacing:.04em;text-shadow:0 0 16px rgba(200,100,255,.9);
   animation:ctaPulse 2.2s ease-in-out infinite;}
 @keyframes ctaPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
 
@@ -423,10 +421,7 @@ function renderLeaderboard(data){
         ${data.boys.length?'<ul class="lb-list">'+li(data.boys)+'</ul>':'<div class="lb-empty">No rankings yet.</div>'}
       </div>
     </div>`;
-    cardInner = `<div class="lb-reveal-wrap">
-      <div class="lb-content-blur">${rankingsHtml}</div>
-      <div class="lb-cta-overlay"><div class="lb-cta-pill">CLICK HERE TO VIEW YOUR RANK!</div></div>
-    </div>`;
+    cardInner = `<div class="lb-cta-pill">CLICK HERE TO VIEW YOUR RANK!</div>`;
     drawerContent = rankingsHtml;
   }
 
