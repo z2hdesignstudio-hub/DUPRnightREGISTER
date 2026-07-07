@@ -75,18 +75,20 @@ h1 .hl{color:var(--pink);}
 
 /* Always fixed at the bottom regardless of viewport */
 #leaderboardSection{position:fixed;bottom:0;left:0;right:0;z-index:85;padding:0;}
-body{padding-bottom:66px;}
+body{padding-bottom:88px;} /* nav 62px + 26px clear room */
 
 /* ── Nav bar ── */
 .lb-card{
   position:relative;cursor:pointer;margin:0;
   background:var(--surface);height:62px;
-  display:flex;align-items:stretch;overflow:visible;
+  display:flex;align-items:stretch;overflow:hidden;
+  box-shadow:0 -4px 20px rgba(60,80,55,.15);
+  border-top:2px solid var(--surface-2);
   animation:lbBreath 3.5s ease-in-out infinite;
 }
 /* Animated purple/navy gradient strip along the top edge */
 .lb-card::before{
-  content:'';position:absolute;top:-4px;left:0;right:0;height:4px;
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
   background:linear-gradient(90deg,#6a00f4,#0d0d6b,#9c00e4,#1a0066,#7f00ff,#000080,#6a00f4);
   background-size:300% 100%;
   animation:lbShift 4s ease-in-out infinite,lbStrobe 2.8s ease-in-out infinite;
