@@ -125,8 +125,9 @@ h1 .hl{color:var(--pink);}
 .lb-pts{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.88rem;
   color:var(--muted);white-space:nowrap;margin-left:6px;}
 /* Separator line between toppers and the rest */
-.lb-sep{height:2px;background:linear-gradient(90deg,transparent,var(--surface-2),transparent);
-  padding:0 !important;border-bottom:none !important;margin:6px 0;pointer-events:none;}
+.lb-sep{height:2px;padding:0 !important;border-bottom:none !important;margin:6px 0;pointer-events:none;}
+.lb-col:first-child .lb-sep{background:linear-gradient(90deg,transparent,var(--pink),transparent);}
+.lb-col:last-child  .lb-sep{background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
 .lb-pause-msg{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;
   color:var(--orange);text-align:center;padding:18px 0;line-height:1.5;
   animation:fadepulse 2s ease-in-out infinite;}
