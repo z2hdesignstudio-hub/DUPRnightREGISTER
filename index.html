@@ -74,63 +74,47 @@ h1 .hl{color:var(--pink);}
 /* ═══ HIVE RANKINGS NAV BAR (fixed bottom — PC + Mobile) ═══ */
 
 /* Always fixed at the bottom regardless of viewport */
-#leaderboardSection{position:fixed;bottom:0;left:0;right:0;z-index:85;padding:0;}
-body{padding-bottom:88px;} /* nav 62px + 26px clear room */
-
-/* ── Nav bar ── */
+/* ═══ HIVE RANKINGS CARD ═══ */
 .lb-card{
-  position:relative;cursor:pointer;margin:0;
-  background:var(--surface);height:62px;
-  display:flex;align-items:stretch;overflow:hidden;
-  box-shadow:0 -4px 20px rgba(60,80,55,.15);
-  border-top:2px solid var(--surface-2);
+  background:var(--surface);border-radius:var(--r);
+  padding:24px 22px;margin-bottom:24px;
+  position:relative;cursor:pointer;
   animation:lbBreath 3.5s ease-in-out infinite;
 }
-/* Animated purple/navy gradient strip along the top edge */
 .lb-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,#6a00f4,#0d0d6b,#9c00e4,#1a0066,#7f00ff,#000080,#6a00f4);
-  background-size:300% 100%;
+  content:'';position:absolute;inset:-3px;border-radius:calc(var(--r) + 3px);
+  background:linear-gradient(135deg,#6a00f4,#0d0d6b,#9c00e4,#1a0066,#7f00ff,#000080);
+  background-size:300% 300%;
   animation:lbShift 4s ease-in-out infinite,lbStrobe 2.8s ease-in-out infinite;
-  border-radius:3px 3px 0 0;
+  z-index:0;
 }
-/* Subtle depth overlay */
 .lb-card::after{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(180deg,rgba(106,0,244,.05) 0%,transparent 55%);
+  content:'';position:absolute;inset:0;border-radius:var(--r);
+  background:var(--surface);z-index:1;
 }
 .lb-card>*{position:relative;z-index:2;}
-
-@keyframes lbShift{
-  0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}
-}
-@keyframes lbStrobe{
-  0%,100%{opacity:1;}45%{opacity:.65;}50%{opacity:.5;}55%{opacity:.65;}
-}
+@keyframes lbShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+@keyframes lbStrobe{0%,100%{opacity:1;}45%{opacity:.65;}50%{opacity:.5;}55%{opacity:.65;}}
 @keyframes lbBreath{
-  0%,100%{box-shadow:0 -4px 15px rgba(106,0,244,.18),0 -2px 8px rgba(0,0,80,.12);}
-  50%{box-shadow:0 -10px 32px rgba(106,0,244,.45),0 -5px 18px rgba(0,0,80,.28);}
+  0%,100%{box-shadow:0 0 0 0 transparent,var(--clay);}
+  50%{box-shadow:0 0 28px 6px rgba(106,0,244,.28),var(--clay);}
 }
-@keyframes fadepulse{0%,100%{opacity:1;}50%{opacity:.5;}}
-@keyframes ctaPulse{
-  0%,100%{transform:scale(1);}50%{transform:scale(1.04);}
-}
-
-/* ── Nav layout (same on PC + mobile) ── */
-.lb-nav-left{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:0 20px;min-width:155px;border-right:1px solid var(--surface-2);
-}
-.lb-nav-title{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.95rem;color:var(--ink);}
-.lb-nav-sub{font-size:.68rem;color:var(--muted);font-weight:700;}
-.lb-nav-right{flex:1;display:flex;align-items:center;justify-content:center;
-  padding:0 16px;text-align:center;}
-.lb-nav-pause{font-family:'Nunito',sans-serif;font-weight:800;font-size:.78rem;
-  color:var(--orange);animation:fadepulse 2s ease-in-out infinite;line-height:1.35;}
-.lb-nav-cta{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1rem;color:#7f00ff;
-  animation:ctaPulse 2.2s ease-in-out infinite;letter-spacing:.02em;}
-.lb-nav-empty{font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;
-  color:var(--muted);font-style:italic;}
+.lb-card h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.5rem;margin-bottom:4px;}
+.lb-card .lbmeta{color:var(--muted);font-weight:700;font-size:.88rem;margin-bottom:18px;}
+.lb-reveal-wrap{position:relative;border-radius:calc(var(--r) - 4px);overflow:hidden;}
+.lb-content-blur{filter:blur(6px);transform:scale(1.02);pointer-events:none;user-select:none;}
+.lb-cta-overlay{position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(40,0,100,.55),rgba(0,0,60,.45));
+  backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;
+  border-radius:inherit;}
+.lb-cta-pill{font-family:'Fredoka',sans-serif;font-weight:700;
+  font-size:clamp(1rem,2.5vw,1.35rem);color:#fff;text-align:center;
+  padding:16px 28px;background:rgba(106,0,244,.35);
+  border:2px solid rgba(200,100,255,.55);border-radius:18px;
+  backdrop-filter:blur(6px);letter-spacing:.04em;
+  text-shadow:0 0 18px rgba(200,100,255,.9);
+  animation:ctaPulse 2.2s ease-in-out infinite;}
+@keyframes ctaPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
 
 /* ── Drawer content ── */
 .lb-pause-msg{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;
@@ -255,8 +239,8 @@ input[type=file]{display:none;}
 
   <!-- SCREEN A: categories + leaderboard -->
   <section id="screenSelect" class="screen active">
-    <div class="grid" id="catGrid"></div>
     <div id="leaderboardSection"></div>
+    <div class="grid" id="catGrid"></div>
   </section>
 
   <!-- SCREEN B: registration form -->
@@ -417,22 +401,21 @@ function c_limit(key){ return ({mixed_doubles:6}[key])||12; }
 /* ── Leaderboard nav bar JS ── */
 
 function renderLeaderboard(data){
-  const sec=document.getElementById('leaderboardSection');
-  const wk=lbWeek();
-  let rightHtml, drawerContent;
+  const sec = document.getElementById('leaderboardSection');
+  const wk  = lbWeek();
+  let cardInner, drawerContent;
 
-  if(data&&data.paused){
-    rightHtml=`<div class="lb-nav-right lb-nav-pause">Please hang tight, we are currently updating your rankings!</div>`;
-    drawerContent=`<div class="lb-pause-msg">Please hang tight, we are currently updating your rankings!</div>`;
-  }else if(!data||(!data.girls.length&&!data.boys.length)){
-    rightHtml=`<div class="lb-nav-right lb-nav-empty">Rankings coming soon</div>`;
-    drawerContent=`<div class="lb-empty">Rankings will appear once the season gets underway.</div>`;
-  }else{
-    rightHtml=`<div class="lb-nav-right lb-nav-cta">CLICK HERE TO VIEW YOUR RANK!</div>`;
-    const ri=n=>n===1?'gold':n===2?'silver':n===3?'bronze':'';
-    const li=players=>players.map((p,i)=>
+  if(data && data.paused){
+    cardInner = `<div class="lb-pause-msg">Please hang tight, we are currently updating your rankings!</div>`;
+    drawerContent = cardInner;
+  } else if(!data || (!data.girls.length && !data.boys.length)){
+    cardInner = `<div class="lb-empty">Rankings will appear once the season gets underway.</div>`;
+    drawerContent = cardInner;
+  } else {
+    const ri = n => n===1?'gold':n===2?'silver':n===3?'bronze':'';
+    const li = players => players.map((p,i)=>
       `<li><span class="lb-rank ${ri(i+1)}">${i+1}</span>${p.name}</li>`).join('');
-    drawerContent=`<div class="lb-cols">
+    const rankingsHtml = `<div class="lb-cols">
       <div class="lb-col"><h3 class="girls">Queens — Top 12</h3>
         ${data.girls.length?'<ul class="lb-list">'+li(data.girls)+'</ul>':'<div class="lb-empty">No rankings yet.</div>'}
       </div>
@@ -440,20 +423,21 @@ function renderLeaderboard(data){
         ${data.boys.length?'<ul class="lb-list">'+li(data.boys)+'</ul>':'<div class="lb-empty">No rankings yet.</div>'}
       </div>
     </div>`;
+    cardInner = `<div class="lb-reveal-wrap">
+      <div class="lb-content-blur">${rankingsHtml}</div>
+      <div class="lb-cta-overlay"><div class="lb-cta-pill">CLICK HERE TO VIEW YOUR RANK!</div></div>
+    </div>`;
+    drawerContent = rankingsHtml;
   }
 
-  // Populate drawer
-  const db=document.getElementById('lbDrawerBody');
-  if(db) db.innerHTML=`<div style="margin-bottom:14px;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.1rem;">Standings as of Week ${wk}</div>${drawerContent}`;
-
-  // Render nav bar (identical for PC and mobile)
-  sec.innerHTML=`<div class="lb-card" id="lbCardEl" onclick="openLbDrawer()">
-    <div class="lb-nav-left">
-      <div class="lb-nav-title">HIVE Rankings</div>
-      <div class="lb-nav-sub">Standings as of Week ${wk}</div>
-    </div>
-    ${rightHtml}
+  sec.innerHTML = `<div class="lb-card" onclick="openLbDrawer()">
+    <h2>HIVE Rankings</h2>
+    <div class="lbmeta">Standings as of Week ${wk}</div>
+    ${cardInner}
   </div>`;
+
+  const db = document.getElementById('lbDrawerBody');
+  if(db) db.innerHTML = `<div style="margin-bottom:14px;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.1rem;">Standings as of Week ${wk}</div>${drawerContent}`;
 }
 
 
