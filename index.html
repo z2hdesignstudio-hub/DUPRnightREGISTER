@@ -115,6 +115,18 @@ h1 .hl{color:var(--pink);}
 @keyframes ctaPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
 
 /* ── Drawer content ── */
+/* Search box */
+.lb-search-wrap{padding-bottom:14px;}
+.lb-search{width:100%;font-family:'Nunito',sans-serif;font-weight:700;font-size:.95rem;
+  color:var(--ink);padding:12px 14px;border:none;border-radius:var(--r-sm);
+  background:var(--surface-2);box-shadow:var(--clay-in);outline:none;}
+/* List item layout */
+.lb-name{flex:1;}
+.lb-pts{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.88rem;
+  color:var(--muted);white-space:nowrap;margin-left:6px;}
+/* Separator line between toppers and the rest */
+.lb-sep{height:2px;background:linear-gradient(90deg,transparent,var(--surface-2),transparent);
+  padding:0 !important;border-bottom:none !important;margin:6px 0;pointer-events:none;}
 .lb-pause-msg{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;
   color:var(--orange);text-align:center;padding:18px 0;line-height:1.5;
   animation:fadepulse 2s ease-in-out infinite;}
@@ -411,18 +423,30 @@ function renderLeaderboard(data){
     drawerContent = cardInner;
   } else {
     const ri = n => n===1?'gold':n===2?'silver':n===3?'bronze':'';
-    const li = players => players.map((p,i)=>
-      `<li><span class="lb-rank ${ri(i+1)}">${i+1}</span>${p.name}</li>`).join('');
+    const gc = data.girlsCutoff||12, bc = data.boysCutoff||36;
+
+    // Build a section list with rank, name, points and a separator at the cutoff
+    const buildList = (players, cutoff) => {
+      if(!players.length) return '<div class="lb-empty">No rankings yet.</div>';
+      const items = players.map((p,i)=>{
+        const sep = i===cutoff ? '<li class="lb-sep" aria-hidden="true"></li>' : '';
+        return sep+`<li data-name="${p.name.toLowerCase()}">
+          <span class="lb-rank ${ri(i+1)}">${i+1}</span>
+          <span class="lb-name">${p.name}</span>
+          <span class="lb-pts">${p.points}</span>
+        </li>`;
+      }).join('');
+      return `<ul class="lb-list">${items}</ul>`;
+    };
+
     const rankingsHtml = `<div class="lb-cols">
-      <div class="lb-col"><h3 class="girls">Queens — Top 12</h3>
-        ${data.girls.length?'<ul class="lb-list">'+li(data.girls)+'</ul>':'<div class="lb-empty">No rankings yet.</div>'}
-      </div>
-      <div class="lb-col"><h3 class="boys">Kings — Top 36</h3>
-        ${data.boys.length?'<ul class="lb-list">'+li(data.boys)+'</ul>':'<div class="lb-empty">No rankings yet.</div>'}
-      </div>
+      <div class="lb-col"><h3 class="girls">Queens</h3>${buildList(data.girls,gc)}</div>
+      <div class="lb-col"><h3 class="boys">Kings</h3>${buildList(data.boys,bc)}</div>
     </div>`;
-    cardInner = `<div class="lb-cta-pill">CLICK HERE TO VIEW YOUR RANK!</div>`;
-    drawerContent = rankingsHtml;
+    cardInner    = `<div class="lb-cta-pill">CLICK HERE TO VIEW YOUR RANK!</div>`;
+    drawerContent = `<div class="lb-search-wrap">
+      <input class="lb-search" type="text" placeholder="Search your name…" oninput="filterLbSearch(this.value)">
+    </div>${rankingsHtml}`;
   }
 
   sec.innerHTML = `<div class="lb-card" onclick="openLbDrawer()">
@@ -455,6 +479,16 @@ function closeLbDrawer(){
   document.body.style.overflow = '';
   drawer.removeEventListener('touchstart', drawer._tsStart);
   drawer.removeEventListener('touchend', drawer._tsEnd);
+}
+
+/* Real-time search — filters player rows in both Queens and Kings simultaneously */
+function filterLbSearch(query){
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('#lbDrawerBody .lb-list li').forEach(li => {
+    if(li.classList.contains('lb-sep')){ li.style.display=''; return; }
+    const name = li.dataset.name || '';
+    li.style.display = (!q || name.includes(q)) ? '' : 'none';
+  });
 }
 
 /* ---- open form ---- */
