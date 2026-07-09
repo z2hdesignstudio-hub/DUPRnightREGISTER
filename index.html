@@ -70,6 +70,11 @@ h1 .hl{color:var(--pink);}
 .card.full{cursor:not-allowed;opacity:.85;} .card.full:hover{transform:none;}
 .full-msg{margin-top:16px;background:var(--surface-2);box-shadow:var(--clay-in);
   border-radius:var(--r-sm);padding:12px 14px;text-align:center;font-weight:700;color:var(--muted);font-size:.92rem;}
+.who-btn{width:100%;margin-top:12px;font-family:'Fredoka',sans-serif;font-weight:600;
+  font-size:.85rem;letter-spacing:.03em;color:var(--muted);
+  background:var(--surface-2);box-shadow:var(--clay-sm);border:none;
+  border-radius:var(--r-sm);padding:11px 10px;cursor:pointer;transition:all .15s ease;}
+.who-btn:hover{color:var(--ink);background:#e3edda;transform:translateY(-1px);}
 
 /* ═══ HIVE RANKINGS NAV BAR (fixed bottom — PC + Mobile) ═══ */
 
@@ -125,9 +130,8 @@ h1 .hl{color:var(--pink);}
 .lb-pts{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.88rem;
   color:var(--muted);white-space:nowrap;margin-left:6px;}
 /* Separator line between toppers and the rest */
-.lb-sep{height:2px;padding:0 !important;border-bottom:none !important;margin:6px 0;pointer-events:none;}
-.lb-col:first-child .lb-sep{background:linear-gradient(90deg,transparent,var(--pink),transparent);}
-.lb-col:last-child  .lb-sep{background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
+.lb-sep{height:2px;background:linear-gradient(90deg,transparent,var(--surface-2),transparent);
+  padding:0 !important;border-bottom:none !important;margin:6px 0;pointer-events:none;}
 .lb-pause-msg{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;
   color:var(--orange);text-align:center;padding:18px 0;line-height:1.5;
   animation:fadepulse 2s ease-in-out infinite;}
@@ -181,6 +185,24 @@ h1 .hl{color:var(--pink);}
 /* Single-column list inside the drawer */
 .lb-drawer-body .lb-cols{grid-template-columns:1fr;}
 .lb-drawer-body .lb-col h3{font-size:1.1rem;margin-top:8px;}
+/* Who's Playing drawer additions */
+.wp-topbar-right{display:flex;align-items:center;gap:8px;}
+.wp-reload{border:none;background:var(--surface-2);box-shadow:var(--clay-sm);
+  border-radius:10px;padding:7px 12px;cursor:pointer;
+  font-family:'Fredoka',sans-serif;font-weight:600;font-size:.85rem;color:var(--ink);
+  display:flex;align-items:center;gap:5px;}
+.wp-reload:hover{background:var(--surface);}
+.wp-reload.spin .wp-reload-icon{animation:wpSpin .6s linear;}
+@keyframes wpSpin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+.wp-slotcount{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.9rem;
+  color:var(--muted);margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--surface-2);}
+.wp-list{list-style:none;}
+.wp-list li{padding:11px 4px;border-bottom:1px solid var(--surface-2);font-weight:700;font-size:.95rem;}
+.wp-list li:last-child{border-bottom:none;}
+.wp-list li .wp-num{color:var(--lime-deep);font-family:'Fredoka',sans-serif;font-weight:600;margin-right:8px;}
+/* Site footer credit */
+.site-footer{text-align:center;padding:20px 16px 24px;font-size:.78rem;
+  font-weight:700;color:var(--muted);opacity:.75;}
 
 /* form */
 .panel{background:var(--surface);border-radius:var(--r);box-shadow:var(--clay);padding:28px 24px;margin-top:8px;}
@@ -212,6 +234,20 @@ input::placeholder{color:#9fb0a1;font-weight:600;}
 input[type=file]{display:none;}
 .err{color:var(--pink);font-weight:800;font-size:.85rem;margin-top:7px;display:none;}
 .err.show{display:block;}
+/* Name autocomplete dropdown */
+.ac-field{position:relative;}
+.ac-list{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:40;
+  background:var(--surface);border-radius:var(--r-sm);box-shadow:var(--clay);
+  max-height:220px;overflow-y:auto;display:none;padding:6px;}
+.ac-list.show{display:block;}
+.ac-item{padding:11px 14px;border-radius:11px;cursor:pointer;font-weight:700;
+  font-size:.95rem;color:var(--ink);display:flex;align-items:center;justify-content:space-between;
+  gap:10px;transition:background .12s ease;}
+.ac-item:hover,.ac-item.active{background:var(--surface-2);}
+.ac-item .ac-g{font-size:.72rem;font-weight:800;padding:3px 9px;border-radius:9px;flex:none;}
+.ac-item .ac-g.M{background:#e1f0ff;color:#2266cc;}
+.ac-item .ac-g.F{background:#ffe1ef;color:var(--pink);}
+.ac-empty{padding:11px 14px;color:var(--muted);font-weight:600;font-size:.88rem;font-style:italic;}
 .submit{width:100%;font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.2rem;color:#fff;
   padding:17px;border:none;border-radius:var(--r);cursor:pointer;margin-top:8px;
   background:linear-gradient(135deg,var(--lime),var(--lime-deep));box-shadow:var(--clay);
@@ -266,6 +302,8 @@ input[type=file]{display:none;}
     </div>
   </section>
 </div>
+
+<footer class="site-footer">Designed and Developed by Z2H Design Studio x RealSolutions</footer>
 
 <!-- Loading overlay -->
 <div class="overlay" id="overlay">
@@ -331,6 +369,7 @@ function lbWeek(){
 let slots = {};
 let current = null;
 const form = {};
+let PLAYER_DIRECTORY = []; // {name, gender} from Points - Overall, for name autocomplete
 
 /* ---- date helpers ---- */
 function dayDate(week, offset){
@@ -402,7 +441,8 @@ function renderCards(){
         : `<div class="spots">
              <div class="left"><b>${left}</b> ${left===1?'spot':'spots'} left</div>
              ${hurry?'<div class="hurry">Hurry! Only '+left+' left</div>':''}
-           </div>`}`;
+           </div>`}
+      <button class="who-btn" onclick="event.stopPropagation();openWhoPlaying('${key}')">SEE WHO IS PLAYING</button>`;
     if(!full && !locked) card.onclick = ()=>openForm(key);
     grid.appendChild(card);
   });
@@ -441,8 +481,8 @@ function renderLeaderboard(data){
     };
 
     const rankingsHtml = `<div class="lb-cols">
-      <div class="lb-col"><h3 class="girls">Queens - Top 12 will move to DNL</h3>${buildList(data.girls,gc)}</div>
-      <div class="lb-col"><h3 class="boys">Kings - Top 36 will move to DNL</h3>${buildList(data.boys,bc)}</div>
+      <div class="lb-col"><h3 class="girls">Queens</h3>${buildList(data.girls,gc)}</div>
+      <div class="lb-col"><h3 class="boys">Kings</h3>${buildList(data.boys,bc)}</div>
     </div>`;
     cardInner    = `<div class="lb-cta-pill">CLICK HERE TO VIEW YOUR RANK!</div>`;
     drawerContent = `<div class="lb-search-wrap">
@@ -462,6 +502,7 @@ function renderLeaderboard(data){
 
 
 function openLbDrawer(){
+  closeWpDrawer(); // never let both drawers stack
   document.getElementById('lbDrawer').classList.add('open');
   document.getElementById('lbDrawerOverlay').classList.add('show');
   document.body.style.overflow = 'hidden';
@@ -480,6 +521,70 @@ function closeLbDrawer(){
   document.body.style.overflow = '';
   drawer.removeEventListener('touchstart', drawer._tsStart);
   drawer.removeEventListener('touchend', drawer._tsEnd);
+}
+
+/* ============================================================
+   WHO'S PLAYING — public name list per category, own drawer
+   instance reusing the same slide-up mechanics as HIVE Rankings.
+   ============================================================ */
+let _wpCurrentKey = null;
+
+async function openWhoPlaying(key){
+  closeLbDrawer(); // never let both drawers stack
+  _wpCurrentKey = key;
+  const c = CATS[key];
+  document.getElementById('wpDrawerTitle').textContent = c ? c.label : "Who's Playing";
+  document.getElementById('wpDrawerBody').innerHTML = '<div class="lb-empty">Loading…</div>';
+
+  document.getElementById('wpDrawer').classList.add('open');
+  document.getElementById('wpDrawerOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+
+  const drawer = document.getElementById('wpDrawer');
+  let _ty = 0;
+  drawer._tsStart = e => { _ty = e.touches[0].clientY; };
+  drawer._tsEnd = e => { if(e.changedTouches[0].clientY - _ty > 70) closeWpDrawer(); };
+  drawer.addEventListener('touchstart', drawer._tsStart, {passive:true});
+  drawer.addEventListener('touchend', drawer._tsEnd, {passive:true});
+
+  await fetchWhoPlaying(key);
+}
+
+function closeWpDrawer(){
+  const drawer = document.getElementById('wpDrawer');
+  drawer.classList.remove('open');
+  document.getElementById('wpDrawerOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+  drawer.removeEventListener('touchstart', drawer._tsStart);
+  drawer.removeEventListener('touchend', drawer._tsEnd);
+}
+
+async function fetchWhoPlaying(key){
+  const body = document.getElementById('wpDrawerBody');
+  try{
+    const res = await fetch(BACKEND_URL+'?action=whoPlaying&week='+WEEK+'&category='+key);
+    const data = await res.json();
+    if(!data.ok){ body.innerHTML = '<div class="lb-empty">Could not load right now.</div>'; return; }
+
+    const slotLine = `<div class="wp-slotcount"><b>${data.filled}</b> / ${data.limit} filled</div>`;
+    if(!data.names.length){
+      body.innerHTML = slotLine + '<div class="lb-empty">No one has registered yet — be the first!</div>';
+      return;
+    }
+    const items = data.names.map((n,i)=>
+      `<li><span class="wp-num">${i+1}.</span>${n}</li>`).join('');
+    body.innerHTML = slotLine + `<ul class="wp-list">${items}</ul>`;
+  }catch(e){
+    body.innerHTML = '<div class="lb-empty">Network error — tap Reload to try again.</div>';
+  }
+}
+
+async function reloadWhoPlaying(){
+  if(!_wpCurrentKey) return;
+  const btn = document.getElementById('wpReloadBtn');
+  btn.classList.add('spin');
+  await fetchWhoPlaying(_wpCurrentKey);
+  setTimeout(()=>btn.classList.remove('spin'),650);
 }
 
 /* Real-time search — filters player rows in both Queens and Kings simultaneously */
@@ -511,9 +616,13 @@ function buildFields(c){
   const duprLabel = c.type==='singles' ? 'Singles DUPR Rating' : 'Doubles DUPR Rating';
   const ex = c.ex || '3.000';
   let html = `
-    <div class="field">
+    <div class="field ac-field">
       <label>Your Name</label>
-      <input type="text" placeholder="e.g. Vibuda Jayathilake" onkeydown="enterNext(event,this)" oninput="setVal('name',this.value)">
+      <input type="text" id="nameInput" autocomplete="off" placeholder="e.g. Vibuda Jayathilake"
+        onkeydown="acKeyNav(event,'name')"
+        oninput="setVal('name',this.value); acShow('name',this.value)"
+        onfocus="acShow('name',this.value)" onblur="acHideDelayed('name')">
+      <div class="ac-list" id="acList-name"></div>
     </div>
     <div class="field">
       <label>${duprLabel}</label>
@@ -521,20 +630,24 @@ function buildFields(c){
     </div>
     <div class="field">
       <label>Gender</label>
-      <div class="seg">
+      <div class="seg" id="segGender">
         <button type="button" data-c="cyan" onclick="pick(this,'gender','M')">Male</button>
         <button type="button" data-c="pink" onclick="pick(this,'gender','F')">Female</button>
       </div>
     </div>`;
   if(c.type !== 'singles'){
     html += `
-    <div class="field">
+    <div class="field ac-field">
       <label>Partner's Name</label>
-      <input type="text" placeholder="Partner full name" onkeydown="enterNext(event,this)" oninput="setVal('partnerName',this.value)">
+      <input type="text" id="partnerNameInput" autocomplete="off" placeholder="Partner full name"
+        onkeydown="acKeyNav(event,'partnerName')"
+        oninput="setVal('partnerName',this.value); acShow('partnerName',this.value)"
+        onfocus="acShow('partnerName',this.value)" onblur="acHideDelayed('partnerName')">
+      <div class="ac-list" id="acList-partnerName"></div>
     </div>
     <div class="field">
       <label>Partner's Gender</label>
-      <div class="seg">
+      <div class="seg" id="segPartnerGender">
         <button type="button" data-c="cyan" onclick="pick(this,'partnerGender','M')">Male</button>
         <button type="button" data-c="pink" onclick="pick(this,'partnerGender','F')">Female</button>
       </div>
@@ -581,6 +694,106 @@ function enterNext(event,el){
   const inputs=Array.from(document.querySelectorAll('#formFields input[type=text],#formFields input[type=number]'));
   const i=inputs.indexOf(el);
   if(i>-1&&i<inputs.length-1)inputs[i+1].focus(); else el.blur();
+}
+
+/* ============================================================
+   NAME AUTOCOMPLETE — suggests names already in the season's
+   player directory (Points - Overall) to reduce typo-driven
+   duplicate entries that fragment a player's points.
+   ============================================================ */
+async function loadPlayerDirectory(){
+  try{
+    const res=await fetch(BACKEND_URL+'?action=playerDirectory');
+    const data=await res.json();
+    if(data&&data.ok&&Array.isArray(data.players)) PLAYER_DIRECTORY=data.players;
+  }catch(e){ /* silent — autocomplete is a convenience, not a requirement */ }
+}
+
+// field: 'name' or 'partnerName'
+const _acActiveIndex={name:-1,partnerName:-1};
+
+function acMatches(query){
+  const q=query.trim().toLowerCase();
+  if(!q) return [];
+  const starts=[], contains=[];
+  PLAYER_DIRECTORY.forEach(p=>{
+    const n=p.name.toLowerCase();
+    if(n.startsWith(q)) starts.push(p);
+    else if(n.includes(q)) contains.push(p);
+  });
+  // Prefix matches first, then substring matches, capped at 6 results
+  return starts.concat(contains).slice(0,6);
+}
+
+function acShow(field,query){
+  const list=document.getElementById('acList-'+field);
+  if(!list) return;
+  const matches=acMatches(query);
+  _acActiveIndex[field]=-1;
+  if(matches.length===0){ list.classList.remove('show'); list.innerHTML=''; return; }
+  list.innerHTML=matches.map((p,i)=>
+    `<div class="ac-item" data-i="${i}" onmousedown="acSelect('${field}',${i})">
+       <span>${p.name}</span><span class="ac-g ${p.gender}">${p.gender}</span>
+     </div>`).join('');
+  list._matches=matches;
+  list.classList.add('show');
+}
+
+function acHideDelayed(field){
+  // Delay so a click on an item (onmousedown) registers before the dropdown vanishes
+  setTimeout(()=>{
+    const list=document.getElementById('acList-'+field);
+    if(list) list.classList.remove('show');
+  },150);
+}
+
+function acSelect(field,index){
+  const list=document.getElementById('acList-'+field);
+  const p=list&&list._matches&&list._matches[index];
+  if(!p) return;
+  const inputId=field==='name'?'nameInput':'partnerNameInput';
+  const input=document.getElementById(inputId);
+  if(input) input.value=p.name;
+  setVal(field,p.name);
+
+  // Auto-fill gender (still editable — just pre-selects the toggle)
+  const genderKey=field==='name'?'gender':'partnerGender';
+  const segId=field==='name'?'segGender':'segPartnerGender';
+  const seg=document.getElementById(segId);
+  if(seg){
+    const btn=Array.from(seg.querySelectorAll('button'))
+      .find(b=>b.getAttribute('onclick').includes(`'${p.gender}'`));
+    if(btn) pick(btn,genderKey,p.gender);
+  }
+  list.classList.remove('show');
+}
+
+// Keyboard navigation: Up/Down to move through suggestions, Enter to select
+function acKeyNav(event,field){
+  const list=document.getElementById('acList-'+field);
+  const open=list&&list.classList.contains('show');
+  if(!open){ enterNext(event,event.target); return; }
+
+  const items=Array.from(list.querySelectorAll('.ac-item'));
+  if(event.key==='ArrowDown'){
+    event.preventDefault();
+    _acActiveIndex[field]=Math.min(_acActiveIndex[field]+1,items.length-1);
+    items.forEach((it,i)=>it.classList.toggle('active',i===_acActiveIndex[field]));
+  }else if(event.key==='ArrowUp'){
+    event.preventDefault();
+    _acActiveIndex[field]=Math.max(_acActiveIndex[field]-1,0);
+    items.forEach((it,i)=>it.classList.toggle('active',i===_acActiveIndex[field]));
+  }else if(event.key==='Enter'){
+    if(_acActiveIndex[field]>-1){
+      event.preventDefault();
+      acSelect(field,_acActiveIndex[field]);
+    }else{
+      list.classList.remove('show');
+      enterNext(event,event.target);
+    }
+  }else if(event.key==='Escape'){
+    list.classList.remove('show');
+  }
 }
 
 /* ---- live validation ---- */
@@ -737,6 +950,7 @@ function goSelect(){ switchScreen('screenSelect'); }
 /* ---- init ---- */
 loadSlots();
 loadLeaderboard();
+loadPlayerDirectory();
 </script>
 <!-- Mobile leaderboard drawer -->
 <div class="lb-drawer-overlay" id="lbDrawerOverlay" onclick="closeLbDrawer()"></div>
@@ -747,6 +961,22 @@ loadLeaderboard();
     <button class="lb-drawer-close" onclick="closeLbDrawer()">Close</button>
   </div>
   <div class="lb-drawer-body" id="lbDrawerBody"></div>
+</div>
+
+<!-- Who's Playing drawer -->
+<div class="lb-drawer-overlay" id="wpDrawerOverlay" onclick="closeWpDrawer()"></div>
+<div class="lb-drawer" id="wpDrawer">
+  <div class="lb-drawer-handle-bar"></div>
+  <div class="lb-drawer-topbar">
+    <span class="lb-drawer-title" id="wpDrawerTitle">Who's Playing</span>
+    <div class="wp-topbar-right">
+      <button class="wp-reload" id="wpReloadBtn" onclick="reloadWhoPlaying()">
+        <span class="wp-reload-icon">&#8635;</span> Reload
+      </button>
+      <button class="lb-drawer-close" onclick="closeWpDrawer()">Close</button>
+    </div>
+  </div>
+  <div class="lb-drawer-body" id="wpDrawerBody"></div>
 </div>
 </body>
 </html>
