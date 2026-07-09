@@ -3,326 +3,202 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DUPR Nights · PickleBee by 71</title>
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="shortcut icon" href="/favicon.ico">
+<title>DUPR Night Analytics · PickleBee by 71</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 <style>
 :root{
-  --bg:#e9efe9; --surface:#f4f8f3; --surface-2:#eef3ed;
-  --lime:#a8d600; --lime-deep:#8bb800;
-  --pink:#ff2e9a; --cyan:#12cccc; --orange:#ff8f00;
-  --ink:#1c2a1f; --muted:#6b7d6e;
+  --bg:#e9efe9;--surface:#f4f8f3;--surface-2:#eef3ed;
+  --lime:#a8d600;--lime-deep:#8bb800;--pink:#ff2e9a;--cyan:#12cccc;--orange:#ff8f00;
+  --ink:#1c2a1f;--muted:#6b7d6e;
   --clay:7px 7px 18px rgba(60,80,55,.18),-7px -7px 16px rgba(255,255,255,.9);
   --clay-in:inset 4px 4px 9px rgba(60,80,55,.16),inset -4px -4px 9px rgba(255,255,255,.85);
   --clay-sm:4px 4px 11px rgba(60,80,55,.16),-4px -4px 10px rgba(255,255,255,.85);
-  --r:26px; --r-sm:16px;
+  --r:24px;--r-sm:13px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{
-  font-family:'Nunito',sans-serif;color:var(--ink);padding:24px 16px 60px;min-height:100vh;
-  background:radial-gradient(circle at 12% 8%,rgba(168,214,0,.10),transparent 40%),
-    radial-gradient(circle at 88% 92%,rgba(18,204,204,.10),transparent 42%),var(--bg);
-  -webkit-font-smoothing:antialiased;
-}
-.wrap{max-width:1080px;margin:0 auto;}
+body{font-family:'Nunito',sans-serif;color:var(--ink);padding:24px 16px 90px;min-height:100vh;
+  background:radial-gradient(circle at 10% 6%,rgba(168,214,0,.10),transparent 40%),
+  radial-gradient(circle at 92% 96%,rgba(18,204,204,.10),transparent 42%),var(--bg);
+  -webkit-font-smoothing:antialiased;}
+.wrap{max-width:1240px;margin:0 auto;}
 header{text-align:center;margin-bottom:30px;}
-.logo{width:108px;height:108px;object-fit:contain;background:var(--surface);border-radius:50%;
-  box-shadow:var(--clay);padding:14px;margin:0 auto 18px;display:block;}
+.logo{width:92px;height:92px;object-fit:contain;background:var(--surface);border-radius:50%;
+  box-shadow:var(--clay);padding:12px;margin:0 auto 16px;display:block;}
 .eyebrow{font-family:'Fredoka',sans-serif;font-weight:600;letter-spacing:.5px;color:var(--cyan);
-  text-transform:uppercase;font-size:.82rem;margin-bottom:4px;}
-h1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(1.7rem,4.5vw,2.7rem);line-height:1.05;}
+  text-transform:uppercase;font-size:.8rem;margin-bottom:4px;}
+h1{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(1.5rem,4vw,2.4rem);line-height:1.08;}
 h1 .hl{color:var(--pink);}
+.toolbar{display:flex;justify-content:center;gap:12px;margin:18px 0 4px;flex-wrap:wrap;}
+.btn{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.98rem;color:var(--ink);
+  background:var(--surface);box-shadow:var(--clay-sm);border:none;border-radius:var(--r-sm);
+  padding:11px 20px;cursor:pointer;transition:transform .15s ease;}
+.btn:hover{transform:translateY(-2px);}
+.btn.cyan{background:var(--cyan);color:#fff;}
+.daysection{margin-top:34px;}
+.dayhead{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.35rem;margin-bottom:4px;
+  display:flex;align-items:center;gap:12px;}
+.dayhead .date{font-size:.95rem;color:var(--muted);font-weight:700;font-family:'Nunito';}
+.catcard{background:var(--surface);border-radius:var(--r);box-shadow:var(--clay);
+  padding:20px 18px;margin-top:18px;}
+.catcard .cattop{display:flex;justify-content:space-between;align-items:center;
+  gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+.catcard .cattitle{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.12rem;}
+.catcard .cattitle .sub{font-family:'Nunito';font-weight:700;color:var(--muted);font-size:.85rem;}
+.fillpill{font-weight:800;font-size:.8rem;padding:5px 12px;border-radius:14px;
+  background:var(--surface-2);box-shadow:var(--clay-sm);color:var(--muted);}
+.table-scroll{overflow-x:auto;border-radius:var(--r-sm);}
+table{border-collapse:separate;border-spacing:0 7px;width:100%;min-width:560px;}
+th{font-family:'Nunito';font-weight:800;font-size:.74rem;text-transform:uppercase;
+  letter-spacing:.4px;color:var(--muted);text-align:left;padding:4px 9px;white-space:nowrap;}
+td{background:var(--surface-2);padding:7px 9px;vertical-align:middle;}
+td:first-child{border-radius:var(--r-sm) 0 0 var(--r-sm);font-family:'Fredoka';
+  font-weight:600;text-align:center;width:46px;color:var(--lime-deep);}
+td:last-child{border-radius:0 var(--r-sm) var(--r-sm) 0;}
+td input{font-family:'Nunito';font-weight:700;font-size:.9rem;color:var(--ink);
+  border:2px solid transparent;border-radius:9px;background:var(--surface);
+  box-shadow:var(--clay-in);padding:8px 10px;width:100%;outline:none;transition:border-color .2s;}
+td input.dupr{width:78px;text-align:center;}
+td input.saved{border-color:var(--lime);}
+td input.failed{border-color:var(--pink);}
+td .avg{font-family:'Fredoka';font-weight:600;color:var(--ink);text-align:center;display:block;}
+select.pay{font-family:'Nunito';font-weight:800;font-size:.82rem;border:none;cursor:pointer;
+  border-radius:9px;padding:8px 8px;box-shadow:var(--clay-sm);outline:none;}
+select.pay[data-v="Paid"]{background:var(--lime-deep);color:#fff;}
+select.pay[data-v="Pending"]{background:#ffe1ef;color:var(--pink);}
+a.sliplink{font-weight:800;font-size:.82rem;color:var(--cyan);text-decoration:none;
+  padding:7px 12px;border-radius:9px;box-shadow:var(--clay-sm);background:var(--surface);
+  display:inline-block;white-space:nowrap;}
+a.sliplink.none{color:var(--muted);box-shadow:none;background:none;cursor:default;}
+.del{border:none;cursor:pointer;background:#ffe1ef;color:var(--pink);font-weight:800;
+  font-size:.8rem;border-radius:9px;padding:8px 11px;box-shadow:var(--clay-sm);white-space:nowrap;}
+.del:hover{background:var(--pink);color:#fff;}
+.xdel{border:none;cursor:pointer;background:var(--ink);color:#fff;font-weight:800;
+  font-size:.8rem;border-radius:9px;padding:8px 10px;box-shadow:var(--clay-sm);
+  white-space:nowrap;margin-left:6px;}
+.xdel:hover{background:#000;}
+.rowacts{display:flex;flex-wrap:nowrap;}
+.emptyrow{color:var(--muted);font-weight:700;padding:14px;text-align:center;
+  background:var(--surface-2);border-radius:var(--r-sm);}
+.cardbtns{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap;}
+.addbtn{font-family:'Fredoka';font-weight:600;font-size:1rem;color:var(--ink);border:none;
+  cursor:pointer;border-radius:var(--r-sm);padding:12px 22px;
+  background:var(--surface-2);box-shadow:var(--clay-sm);}
+.addbtn:hover{transform:translateY(-2px);background:#e3edda;}
+.drawbtn{font-family:'Fredoka';font-weight:600;font-size:1rem;color:#fff;border:none;
+  cursor:pointer;border-radius:var(--r-sm);padding:12px 22px;
+  background:linear-gradient(135deg,var(--cyan),var(--lime-deep));box-shadow:var(--clay-sm);}
+.drawbtn:hover{transform:translateY(-2px);}
+.loading{text-align:center;color:var(--muted);font-weight:700;padding:50px;}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;font-weight:700;padding:12px 22px;border-radius:14px;
+  box-shadow:var(--clay);opacity:0;pointer-events:none;transition:opacity .3s;z-index:80;}
+.toast.show{opacity:1;}
 
-/* screens */
-.screen{display:none;animation:rise .4s ease both;}
-.screen.active{display:block;}
-@keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+/* Draw config popup */
+.modal{position:fixed;inset:0;background:rgba(28,42,31,.6);backdrop-filter:blur(5px);
+  display:none;z-index:70;padding:22px 16px;overflow:auto;align-items:flex-start;justify-content:center;}
+.modal.show{display:flex;}
+.msheet{max-width:620px;width:100%;background:var(--surface);border-radius:var(--r);
+  box-shadow:var(--clay);padding:28px 24px;margin:auto;}
+.msheet h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:4px;}
+.msheet .msub{color:var(--muted);font-weight:700;margin-bottom:20px;font-size:.9rem;}
+.msheet h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1rem;margin:18px 0 10px;}
+.cfgtotal{font-family:'Fredoka',sans-serif;font-size:1.1rem;font-weight:600;
+  padding:12px 16px;border-radius:var(--r-sm);background:var(--surface-2);
+  box-shadow:var(--clay-in);margin-bottom:18px;color:var(--ink);}
+.cfgtotal b{color:var(--cyan);}
+.segg{display:flex;gap:8px;flex-wrap:wrap;}
+.segg button{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1rem;
+  padding:11px 18px;border:none;border-radius:var(--r-sm);cursor:pointer;
+  background:var(--surface-2);box-shadow:var(--clay-sm);color:var(--muted);transition:all .15s;}
+.segg button.sel{background:var(--ink);color:#fff;box-shadow:var(--clay-in);}
+.segg button.fin{background:var(--surface-2);}
+.segg button.fin.sel{background:var(--cyan);color:#fff;}
+.segg button:disabled{opacity:.4;cursor:not-allowed;}
+.grp-inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:12px;}
+.grp-inp-wrap label{display:block;font-weight:800;font-size:.82rem;margin-bottom:6px;color:var(--muted);}
+.grp-inp-wrap input{width:100%;font-family:'Nunito';font-weight:700;font-size:1.1rem;text-align:center;
+  color:var(--ink);padding:12px 8px;border:2px solid transparent;border-radius:var(--r-sm);
+  background:var(--surface-2);box-shadow:var(--clay-in);outline:none;transition:border-color .2s;}
+.grp-inp-wrap input.ok{border-color:var(--lime);}
+.grp-inp-wrap input.err{border-color:var(--pink);}
+.sum-pill{display:inline-block;margin-top:14px;padding:8px 16px;border-radius:14px;
+  font-weight:800;font-size:.88rem;}
+.sum-pill.ok{background:#d6f0c2;color:#3a6b00;}
+.sum-pill.err{background:#ffe1ef;color:var(--pink);}
+.mbtns{display:flex;gap:12px;margin-top:24px;justify-content:flex-end;flex-wrap:wrap;}
+.mbtns .btn.green{background:linear-gradient(135deg,var(--lime),var(--lime-deep));color:#fff;}
+.mbtns .btn.green:disabled{background:var(--surface-2);color:#a8b8aa;cursor:not-allowed;transform:none;}
 
-/* category cards */
-.grid{display:grid;gap:20px;margin-top:26px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
-.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--clay);padding:24px 22px 22px;
-  cursor:pointer;position:relative;overflow:hidden;border:3px solid transparent;
-  transition:transform .18s ease,box-shadow .18s ease;}
-.card:hover{transform:translateY(-4px);}
-.card:active{transform:translateY(0);box-shadow:var(--clay-in);}
-.card .bar{position:absolute;top:0;left:0;right:0;height:7px;}
-.card[data-accent=lime] .bar{background:var(--lime);}
-.card[data-accent=pink] .bar{background:var(--pink);}
-.card[data-accent=cyan] .bar{background:var(--cyan);}
-.card[data-accent=orange] .bar{background:var(--orange);}
-.card .cat{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.32rem;margin-bottom:10px;margin-top:4px;}
-.card .meta{font-size:.95rem;color:var(--muted);font-weight:600;line-height:1.55;}
-.card .meta b{color:var(--ink);}
-.card .rule{display:inline-block;margin-top:12px;font-size:.78rem;font-weight:700;
-  padding:5px 12px;border-radius:20px;background:var(--surface-2);box-shadow:var(--clay-sm);color:var(--ink);}
-.card .spots{margin-top:16px;display:flex;align-items:center;justify-content:space-between;}
-.spots .left{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;}
-.spots .left b{font-size:1.5rem;color:var(--lime-deep);}
-.hurry{background:var(--pink);color:#fff;font-weight:800;font-size:.78rem;padding:6px 12px;
-  border-radius:14px;box-shadow:var(--clay-sm);animation:pulse 1.3s ease-in-out infinite;}
-@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
-.card.full{cursor:not-allowed;opacity:.85;} .card.full:hover{transform:none;}
-.full-msg{margin-top:16px;background:var(--surface-2);box-shadow:var(--clay-in);
-  border-radius:var(--r-sm);padding:12px 14px;text-align:center;font-weight:700;color:var(--muted);font-size:.92rem;}
-.who-btn{width:100%;margin-top:12px;font-family:'Fredoka',sans-serif;font-weight:600;
-  font-size:.85rem;letter-spacing:.03em;color:var(--muted);
-  background:var(--surface-2);box-shadow:var(--clay-sm);border:none;
-  border-radius:var(--r-sm);padding:11px 10px;cursor:pointer;transition:all .15s ease;}
-.who-btn:hover{color:var(--ink);background:#e3edda;transform:translateY(-1px);}
-/* Button colour matches its card's accent */
-.who-btn[data-accent=lime]{color:var(--lime-deep);}
-.who-btn[data-accent=lime]:hover{background:#e3f2c2;}
-.who-btn[data-accent=pink]{color:var(--pink);}
-.who-btn[data-accent=pink]:hover{background:#ffe1ef;}
-.who-btn[data-accent=cyan]{color:#0aa8a8;}
-.who-btn[data-accent=cyan]:hover{background:#d4f5f5;}
-.who-btn[data-accent=orange]{color:var(--orange);}
-.who-btn[data-accent=orange]:hover{background:#ffe9c2;}
+/* Draw preview sheet */
+.psheet{max-width:900px;background:var(--surface);border-radius:var(--r);
+  box-shadow:var(--clay);padding:26px 24px 32px;margin:auto;}
+.psheet .otp-banner{background:linear-gradient(135deg,var(--cyan),var(--lime-deep));
+  color:#fff;border-radius:var(--r-sm);padding:16px 18px;margin:4px 0 20px;text-align:center;}
+.psheet .otp-banner b{font-family:'Fredoka',sans-serif;font-size:2.4rem;letter-spacing:.2em;display:block;margin-top:2px;}
+.psheet .otp-banner span{font-size:.82rem;font-weight:600;opacity:.92;display:block;margin-top:4px;}
+.psheet h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.5rem;}
+.psheet .meta{color:var(--muted);font-weight:700;margin:4px 0 18px;}
+.psheet h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.12rem;margin:22px 0 10px;
+  padding-bottom:6px;border-bottom:2px solid var(--surface-2);}
+.dtable{width:100%;border-collapse:collapse;margin-bottom:6px;font-size:.9rem;}
+.dtable th{background:var(--surface-2);color:var(--ink);text-align:left;padding:8px 10px;
+  font-size:.72rem;border:1px solid #d7e1d4;font-weight:800;}
+.dtable td{padding:8px 10px;border:1px solid #d7e1d4;font-weight:600;}
+.dtable td.c{text-align:center;}
+/* Reset the general td:first-child lime styling so all dtable columns look identical */
+.dtable td:first-child{border-radius:0;font-family:'Nunito',sans-serif;font-weight:600;
+  text-align:left;width:auto;color:var(--ink);}
+.notebox{background:var(--surface-2);box-shadow:var(--clay-in);border-radius:var(--r-sm);
+  padding:12px 14px;font-size:.85rem;font-weight:600;color:var(--muted);margin-top:8px;}
 
-/* ═══ HIVE RANKINGS NAV BAR (fixed bottom — PC + Mobile) ═══ */
-
-/* Always fixed at the bottom regardless of viewport */
-/* ═══ HIVE RANKINGS CARD ═══ */
-.lb-card{
-  background:var(--surface);border-radius:var(--r);
-  padding:24px 22px;margin-bottom:24px;
-  position:relative;cursor:pointer;
-  /* Flex column: centers title + subtitle + message as one group vertically */
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;text-align:center;min-height:160px;
-  animation:lbBreath 3.5s ease-in-out infinite;
-}
-.lb-card::before{
-  content:'';position:absolute;inset:-3px;border-radius:calc(var(--r) + 3px);
-  background:linear-gradient(135deg,#6a00f4,#0d0d6b,#9c00e4,#1a0066,#7f00ff,#000080);
-  background-size:300% 300%;
-  animation:lbShift 4s ease-in-out infinite,lbStrobe 2.8s ease-in-out infinite;
-  z-index:0;
-}
-.lb-card::after{
-  content:'';position:absolute;inset:0;border-radius:var(--r);
-  background:var(--surface);z-index:1;
-}
-.lb-card>*{position:relative;z-index:2;}
-@keyframes lbShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
-@keyframes lbStrobe{0%,100%{opacity:1;}45%{opacity:.65;}50%{opacity:.5;}55%{opacity:.65;}}
-@keyframes lbBreath{
-  0%,100%{box-shadow:0 0 0 0 transparent,var(--clay);}
-  50%{box-shadow:0 0 28px 6px rgba(106,0,244,.28),var(--clay);}
-}
-.lb-card h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.5rem;margin-bottom:4px;}
-.lb-card .lbmeta{color:var(--muted);font-weight:700;font-size:.88rem;margin-bottom:16px;}
-/* Purple CTA pill — standalone inside the card, no overlay needed */
-.lb-cta-pill{font-family:'Fredoka',sans-serif;font-weight:700;
-  font-size:1.05rem;color:#fff;text-align:center;
-  padding:14px 28px;
-  background:linear-gradient(135deg,rgba(106,0,244,.85),rgba(0,0,100,.7));
-  border:2px solid rgba(200,100,255,.65);border-radius:18px;
-  letter-spacing:.04em;text-shadow:0 0 16px rgba(200,100,255,.9);
-  animation:ctaPulse 2.2s ease-in-out infinite;}
-@keyframes ctaPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
-
-/* ── Drawer content ── */
-/* Search box */
-.lb-search-wrap{padding-bottom:14px;}
-.lb-search{width:100%;font-family:'Nunito',sans-serif;font-weight:700;font-size:.95rem;
-  color:var(--ink);padding:12px 14px;border:none;border-radius:var(--r-sm);
-  background:var(--surface-2);box-shadow:var(--clay-in);outline:none;}
-/* List item layout */
-.lb-name{flex:1;}
-.lb-pts{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.88rem;
-  color:var(--muted);white-space:nowrap;margin-left:6px;}
-/* Separator line between toppers and the rest */
-.lb-sep{height:2px;background:linear-gradient(90deg,transparent,var(--surface-2),transparent);
-  padding:0 !important;border-bottom:none !important;margin:6px 0;pointer-events:none;}
-.lb-pause-msg{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;
-  color:var(--orange);text-align:center;padding:18px 0;line-height:1.5;
-  animation:fadepulse 2s ease-in-out infinite;}
-.lb-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-@media(max-width:560px){.lb-cols{grid-template-columns:1fr;}}
-.lb-col h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;
-  margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--surface-2);}
-.lb-col h3.girls{color:var(--pink);}.lb-col h3.boys{color:var(--cyan);}
-.lb-list{list-style:none;}
-.lb-list li{display:flex;gap:10px;align-items:center;padding:7px 0;
-  border-bottom:1px solid var(--surface-2);font-weight:700;font-size:.95rem;}
-.lb-list li:last-child{border-bottom:none;}
-.lb-rank{font-family:'Fredoka',sans-serif;font-weight:600;color:var(--muted);
-  min-width:26px;text-align:right;font-size:.85rem;}
-.lb-rank.gold{color:#d4a017;}.lb-rank.silver{color:#8a8a8a;}.lb-rank.bronze{color:#b97b4a;}
-.lb-empty{color:var(--muted);font-weight:700;font-size:.92rem;padding:12px 0;font-style:italic;}
-
-/* Bottom drawer (hidden until open) */
-.lb-drawer-overlay{
-  position:fixed;inset:0;background:rgba(28,42,31,.52);
-  backdrop-filter:blur(4px);z-index:98;
-  opacity:0;pointer-events:none;transition:opacity .35s ease;
-}
-.lb-drawer-overlay.show{opacity:1;pointer-events:auto;}
-.lb-drawer{
-  position:fixed;bottom:0;left:0;right:0;z-index:99;
-  background:var(--surface);
-  border-radius:26px 26px 0 0;
-  box-shadow:0 -10px 50px rgba(60,80,55,.22);
-  max-height:88vh;display:flex;flex-direction:column;
-  transform:translateY(102%);transition:transform .4s cubic-bezier(.25,.8,.25,1);
-}
-.lb-drawer.open{transform:translateY(0);}
-.lb-drawer-handle-bar{
-  width:50px;height:5px;border-radius:3px;
-  background:var(--surface-2);margin:14px auto 2px;flex-shrink:0;
-}
-.lb-drawer-topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 20px 12px;flex-shrink:0;
-  border-bottom:1px solid var(--surface-2);
-}
-.lb-drawer-title{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.25rem;}
-.lb-drawer-close{
-  border:none;background:var(--surface-2);box-shadow:var(--clay-sm);
-  border-radius:10px;padding:7px 12px;cursor:pointer;
+/* Floating nav bar */
+.floatnav{position:fixed;bottom:0;left:0;right:0;z-index:90;
+  background:var(--surface);box-shadow:0 -4px 20px rgba(60,80,55,.15);
+  display:flex;align-items:stretch;height:62px;border-top:2px solid var(--surface-2);}
+.floatnav a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
   font-family:'Fredoka',sans-serif;font-weight:600;font-size:.9rem;color:var(--muted);
-}
-.lb-drawer-close:hover{background:var(--surface);}
-.lb-drawer-body{overflow-y:auto;padding:18px 20px 40px;flex:1;-webkit-overflow-scrolling:touch;}
-/* Single-column list inside the drawer */
-.lb-drawer-body .lb-cols{grid-template-columns:1fr;}
-.lb-drawer-body .lb-col h3{font-size:1.1rem;margin-top:8px;}
-/* Who's Playing drawer additions */
-.wp-topbar-right{display:flex;align-items:center;gap:8px;}
-.wp-reload{border:none;background:var(--surface-2);box-shadow:var(--clay-sm);
-  border-radius:10px;padding:7px 12px;cursor:pointer;
-  font-family:'Fredoka',sans-serif;font-weight:600;font-size:.85rem;color:var(--ink);
-  display:flex;align-items:center;gap:5px;}
-.wp-reload:hover{background:var(--surface);}
-.wp-reload.spin .wp-reload-icon{animation:wpSpin .6s linear;}
-@keyframes wpSpin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
-.wp-slotcount{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.9rem;
-  color:var(--muted);margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid var(--surface-2);}
-.wp-list{list-style:none;}
-.wp-list li{padding:11px 4px;border-bottom:1px solid var(--surface-2);font-weight:700;font-size:.95rem;}
-.wp-list li:last-child{border-bottom:none;}
-.wp-list li .wp-num{color:var(--lime-deep);font-family:'Fredoka',sans-serif;font-weight:600;margin-right:8px;}
-/* Site footer credit */
-.site-footer{text-align:center;padding:20px 16px 24px;font-size:.78rem;
-  font-weight:700;color:var(--muted);opacity:.75;}
-
-/* form */
-.panel{background:var(--surface);border-radius:var(--r);box-shadow:var(--clay);padding:28px 24px;margin-top:8px;}
-.back{background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;
-  color:var(--cyan);font-size:.95rem;margin-bottom:14px;display:inline-flex;align-items:center;gap:6px;}
-.panel h2{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.5rem;}
-.panel .sched{color:var(--muted);font-weight:700;margin:6px 0 22px;line-height:1.5;}
-.field{margin-bottom:18px;}
-.field label{display:block;font-weight:800;font-size:.92rem;margin-bottom:8px;color:var(--ink);}
-.field .opt{color:var(--muted);font-weight:600;font-size:.82rem;}
-input[type=text],input[type=number]{width:100%;font-family:'Nunito',sans-serif;font-size:1rem;
-  font-weight:600;color:var(--ink);padding:14px 16px;border:none;border-radius:var(--r-sm);
-  background:var(--surface-2);box-shadow:var(--clay-in);outline:none;}
-input::placeholder{color:#9fb0a1;font-weight:600;}
-.seg{display:flex;gap:10px;}
-.seg button{flex:1;font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;padding:13px 8px;
-  border:none;border-radius:var(--r-sm);cursor:pointer;background:var(--surface-2);
-  box-shadow:var(--clay-sm);color:var(--muted);transition:all .15s ease;}
-.seg button.sel{color:#fff;box-shadow:var(--clay-in);}
-.seg button.sel[data-c=lime]{background:var(--lime-deep);}
-.seg button.sel[data-c=pink]{background:var(--pink);}
-.seg button.sel[data-c=cyan]{background:var(--cyan);}
-.seg button.sel[data-c=orange]{background:var(--orange);}
-.file-btn{display:flex;align-items:center;gap:12px;cursor:pointer;background:var(--surface-2);
-  box-shadow:var(--clay-in);border-radius:var(--r-sm);padding:14px 16px;font-weight:700;color:var(--muted);}
-.file-btn .ic{width:38px;height:38px;flex:none;border-radius:11px;background:var(--cyan);
-  box-shadow:var(--clay-sm);display:grid;place-items:center;color:#fff;font-size:1.3rem;font-weight:700;}
-.file-btn.has{color:var(--ink);} .file-btn.has .ic{background:var(--lime-deep);}
-input[type=file]{display:none;}
-.err{color:var(--pink);font-weight:800;font-size:.85rem;margin-top:7px;display:none;}
-.err.show{display:block;}
-/* Name autocomplete dropdown */
-.ac-field{position:relative;}
-.ac-list{position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:40;
-  background:var(--surface);border-radius:var(--r-sm);box-shadow:var(--clay);
-  max-height:220px;overflow-y:auto;display:none;padding:6px;}
-.ac-list.show{display:block;}
-.ac-item{padding:11px 14px;border-radius:11px;cursor:pointer;font-weight:700;
-  font-size:.95rem;color:var(--ink);display:flex;align-items:center;justify-content:space-between;
-  gap:10px;transition:background .12s ease;}
-.ac-item:hover,.ac-item.active{background:var(--surface-2);}
-.ac-item .ac-g{font-size:.72rem;font-weight:800;padding:3px 9px;border-radius:9px;flex:none;}
-.ac-item .ac-g.M{background:#e1f0ff;color:#2266cc;}
-.ac-item .ac-g.F{background:#ffe1ef;color:var(--pink);}
-.ac-empty{padding:11px 14px;color:var(--muted);font-weight:600;font-size:.88rem;font-style:italic;}
-.submit{width:100%;font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.2rem;color:#fff;
-  padding:17px;border:none;border-radius:var(--r);cursor:pointer;margin-top:8px;
-  background:linear-gradient(135deg,var(--lime),var(--lime-deep));box-shadow:var(--clay);
-  transition:all .15s ease;}
-.submit:hover:not(:disabled){transform:translateY(-2px);}
-.submit:disabled{background:var(--surface-2);color:#a8b8aa;box-shadow:var(--clay-in);cursor:not-allowed;}
-
-/* overlay */
-.overlay{position:fixed;inset:0;background:rgba(233,239,233,.85);backdrop-filter:blur(6px);
-  display:none;place-items:center;z-index:50;}
-.overlay.show{display:grid;}
-.loadbox{background:var(--surface);border-radius:var(--r);box-shadow:var(--clay);
-  padding:36px 30px;width:min(420px,90vw);text-align:center;}
-.dots{display:flex;gap:10px;justify-content:center;margin-bottom:18px;}
-.dots span{width:15px;height:15px;border-radius:50%;background:var(--cyan);box-shadow:var(--clay-sm);
-  animation:bounce 1s infinite ease-in-out;}
-.dots span:nth-child(2){background:var(--pink);animation-delay:.15s;}
-.dots span:nth-child(3){background:var(--lime-deep);animation-delay:.3s;}
-@keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.6;}40%{transform:translateY(-10px);opacity:1;}}
-.loadbox.done .dots span{animation:none;background:var(--lime-deep);opacity:1;}
-.loadbox.error .dots span{animation:none;background:var(--pink);opacity:1;}
-.loadbox .msg{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.3rem;margin-bottom:20px;}
-.track{background:var(--surface-2);box-shadow:var(--clay-in);border-radius:20px;height:18px;overflow:hidden;}
-.fill{height:100%;width:0%;border-radius:20px;background:linear-gradient(90deg,var(--cyan),var(--lime));transition:width .1s linear;}
-.loadbox.done .fill{background:linear-gradient(90deg,var(--lime),var(--lime-deep));}
-.err-msg{color:var(--pink);font-weight:800;margin-top:6px;}
+  text-decoration:none;gap:3px;transition:color .15s;}
+.floatnav a.active,.floatnav a:hover{color:var(--cyan);}
+.floatnav a .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);
+  display:none;margin-top:2px;}
+.floatnav a.active .dot{display:block;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <img src="./picklebee-logo.png" class="logo" alt="PickleBee by 71" onerror="this.style.display='none'">
-    <div class="eyebrow">DUPR Nights — Season 2</div>
-    <h1 id="welcome">Welcome to the <span class="hl">HIVE</span></h1>
-  </header>
-
-  <!-- SCREEN A: categories + leaderboard -->
-  <section id="screenSelect" class="screen active">
-    <div id="leaderboardSection"></div>
-    <div class="grid" id="catGrid"></div>
-  </section>
-
-  <!-- SCREEN B: registration form -->
-  <section id="screenForm" class="screen">
-    <div class="panel">
-      <button class="back" onclick="goSelect()">‹ Back to events</button>
-      <h2 id="formTitle"></h2>
-      <p class="sched" id="formSched"></p>
-      <div id="formFields"></div>
-      <p class="err" id="tierErr"></p>
-      <button class="submit" id="submitBtn" disabled onclick="submitEntry()">Reserve my spot</button>
+    <div class="eyebrow">DUPR Night Analytics — Season 2</div>
+    <h1 id="welcome">Insights from PickleBee by 71</h1>
+    <div class="toolbar">
+      <button class="btn cyan" onclick="loadDashboard()">Reload data</button>
     </div>
-  </section>
+  </header>
+  <div id="content"><div class="loading">Loading registrations…</div></div>
 </div>
 
-<footer class="site-footer">Designed and Developed by Z2H Design Studio x RealSolutions</footer>
-
-<!-- Loading overlay -->
-<div class="overlay" id="overlay">
-  <div class="loadbox" id="loadbox">
-    <div class="dots" id="loadDots"><span></span><span></span><span></span></div>
-    <div class="msg" id="loadMsg">Reserving your spot at the HIVE</div>
-    <div class="track"><div class="fill" id="fill"></div></div>
-    <p class="err-msg" id="loadErr"></p>
-  </div>
+<!-- Draw config popup -->
+<div class="modal" id="cfgModal">
+  <div class="msheet" id="cfgSheet"></div>
 </div>
+
+<!-- Draw preview modal -->
+<div class="modal" id="drawModal">
+  <div class="psheet" id="drawSheet"></div>
+</div>
+
+<!-- Floating nav bar -->
+<nav class="floatnav">
+  <a href="https://pb71.org/">Registrations</a>
+  <a href="https://z2hdesignstudio-hub.github.io/scoringDUPR/" target="_blank">Score</a>
+  <a href="https://z2hdesignstudio-hub.github.io/DUPRleaderboard/" target="_blank">Leaderboard</a>
+</nav>
+
+<div class="toast" id="toast"></div>
 
 <script>
 /* ============================================================
@@ -330,672 +206,543 @@ input[type=file]{display:none;}
    ============================================================ */
 const BACKEND_URL = "https://script.google.com/macros/s/AKfycbzeZaUXvfqsA1oVqwwnSxdn_JJrYnCJQ5-3vA0-TCJSjMZUP2tRMEl-PawqlxZ5opGbXg/exec";
 
-/* ---- week anchor (must match Code.gs) ---- */
 const WEEK14_START = new Date(2026, 5, 13); // Sat 13 Jun 2026
 
-/* ---- category definitions ---- */
-const CATS = {
-  action_doubles: {
-    label:'ACTION BEE · Doubles', type:'doubles', accent:'orange',
-    day:'Mon', offset:2, time:'7:30 PM onwards',
-    rule:'DUPR below 3.600', tierMax:3.600, tierStrict:true, ex:'3.000', sinceWeek:17,
-  },
-  mixed_doubles: {
-    label:'MIXED BEE · Doubles', type:'mixed', accent:'pink',
-    day:'Tue', offset:3, time:'8:00 PM - 10:30 PM',
-    rule:'Open to all', ex:'3.000',
-  },
-  newbee_doubles: {
-    label:'NEW BEE · Doubles', type:'doubles', accent:'lime',
-    day:'Wed', offset:4, time:'7:00 PM - 9:15 PM',
-    rule:'DUPR 3.050 & below', tierMax:3.050, ex:'2.725',
-  },
-  stinger_doubles: {
-    label:'STINGER BEE · Doubles', type:'doubles', accent:'cyan',
-    day:'Wed', offset:4, time:'9:30 PM - 11:30 PM',
-    rule:'DUPR 3.051 & above', tierMin:3.051, ex:'3.250',
-  },
-  newbee_singles: {
-    label:'NEW BEE · Singles', type:'singles', accent:'lime',
-    day:'Thu', offset:5, time:'7:00 PM - 8:15 PM',
-    rule:'DUPR 3.050 & below', tierMax:3.050, ex:'2.725',
-  },
-  stinger_singles: {
-    label:'STINGER BEE · Singles', type:'singles', accent:'cyan',
-    day:'Thu', offset:5, time:'8:30 PM onwards',
-    rule:'DUPR 3.051 & above', tierMin:3.051, ex:'3.250',
-  },
-};
+// Day sections in display order — filtered by active week
+const DAY_GROUPS_FULL = [
+  { day:'monday',    title:'Monday Schedule',    cats:['action_doubles'],              sinceWeek:17 },
+  { day:'tuesday',   title:'Tuesday Schedule',   cats:['mixed_doubles'] },
+  { day:'wednesday', title:'Wednesday Schedule', cats:['newbee_doubles','stinger_doubles'] },
+  { day:'thursday',  title:'Thursday Schedule',  cats:['newbee_singles','stinger_singles'] },
+];
 
-let WEEK = 14;
-
-// Computes the current DUPR week directly from the clock.
-// Used by the leaderboard subtitle so it's accurate even when
-// loadLeaderboard() resolves before loadSlots() sets WEEK.
-function lbWeek(){
-  return 14+Math.floor((Date.now()-WEEK14_START.getTime())/(7*24*60*60*1000));
-}
-let slots = {};
-let current = null;
-const form = {};
-let PLAYER_DIRECTORY = []; // {name, gender} from Points - Overall, for name autocomplete
-
-/* ---- date helpers ---- */
-function dayDate(week, offset){
-  const d = new Date(WEEK14_START);
-  d.setDate(d.getDate() + (week-14)*7 + offset);
-  return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-}
-function nowInColombo(){
-  return new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Colombo'}));
-}
-function eventCutoff(week, offset){
-  const d = new Date(WEEK14_START);
-  d.setDate(d.getDate() + (week-14)*7 + offset);
-  d.setHours(16,30,0,0);
-  return d;
-}
-function isLocked(c){ return nowInColombo().getTime() > eventCutoff(WEEK, c.offset).getTime(); }
-
-// An event is considered "done" once its calendar day has fully passed
-// (i.e. from midnight the following day) — used to switch the
-// "SEE WHO IS PLAYING" button to "SEE WHO PLAYED".
-function isEventDone(c){
-  const d = new Date(WEEK14_START);
-  d.setDate(d.getDate() + (WEEK-14)*7 + c.offset + 1); // start of the NEXT day
-  d.setHours(0,0,0,0);
-  return nowInColombo().getTime() >= d.getTime();
+function getDayGroups(week){
+  return DAY_GROUPS_FULL.filter(g=>!g.sinceWeek||week>=g.sinceWeek);
 }
 
-/* ---- load slot counts + leaderboard on open ---- */
-async function loadSlots(){
-  // PERF: 10-second timeout on initial load
-  const ctrl = new AbortController();
-  const timer = setTimeout(()=>ctrl.abort(), 10000);
+let DASH = null;
+let LAST_DRAW = null;
+let CURRENT_DRAW_KEY = null;
+
+// PERF: debounce storage for cell saves
+const _debounce = {};
+
+/* ======================== dashboard ======================== */
+async function loadDashboard(){
+  document.getElementById('content').innerHTML='<div class="loading">Loading registrations…</div>';
   try{
-    const res = await fetch(BACKEND_URL, {signal: ctrl.signal});
-    clearTimeout(timer);
-    const data = await res.json();
-    WEEK = data.week;
-    slots = data;
-    document.getElementById('welcome').innerHTML =
-      `Welcome to the <span class="hl">Week ${WEEK}</span> of DUPR at PickleBee by 71`;
-    renderCards();
+    const res=await fetch(BACKEND_URL+'?action=dashboard');
+    DASH=await res.json();
+    document.getElementById('welcome').innerHTML=
+      `Insights from the <span class="hl">Week ${DASH.week}</span> of DUPR at PickleBee by 71`;
+    render();
   }catch(e){
-    document.getElementById('catGrid').innerHTML =
-      '<div class="full-msg">Couldn\'t load events. Please refresh in a moment.</div>';
+    document.getElementById('content').innerHTML='<div class="loading">Could not load data. Check URL and try Reload.</div>';
   }
 }
-async function loadLeaderboard(){
-  try{
-    const res = await fetch(BACKEND_URL+'?action=leaderboard');
-    const data = await res.json();
-    renderLeaderboard(data);
-  }catch(e){ renderLeaderboard({ok:true,girls:[],boys:[]}); }
-}
 
-/* ---- render category cards ---- */
-function renderCards(){
-  const grid = document.getElementById('catGrid');
-  grid.innerHTML = '';
-  Object.keys(CATS).forEach(key=>{
-    const c = CATS[key];
-    // sinceWeek guard — hide categories not yet launched
-    if(c.sinceWeek && WEEK < c.sinceWeek) return;
-    const s = slots[key] || { left:c_limit(key), limit:c_limit(key) };
-    const left = s.left;
-    const locked = isLocked(c);
-    const full = left <= 0;
-    const hurry = !locked && left > 0 && left <= 3;
-    const card = document.createElement('div');
-    card.className = 'card' + ((full || locked) ? ' full' : '');
-    card.setAttribute('data-accent', c.accent);
-    card.innerHTML = `
-      <div class="bar"></div>
-      <div class="cat">${c.label}</div>
-      <div class="meta"><b>${c.day} · ${dayDate(WEEK,c.offset)}</b><br>${c.time}</div>
-      <div class="rule">${c.rule}</div>
-      ${locked ? '<div class="full-msg">See you next week!</div>'
-        : full ? '<div class="full-msg">Sorry, no slots left! see you next week!</div>'
-        : `<div class="spots">
-             <div class="left"><b>${left}</b> ${left===1?'spot':'spots'} left</div>
-             ${hurry?'<div class="hurry">Hurry! Only '+left+' left</div>':''}
-           </div>`}
-      <button class="who-btn" data-accent="${c.accent}" onclick="event.stopPropagation();openWhoPlaying('${key}')">${isEventDone(c) ? 'SEE WHO PLAYED' : 'SEE WHO IS PLAYING'}</button>`;
-    if(!full && !locked) card.onclick = ()=>openForm(key);
-    grid.appendChild(card);
+function render(){
+  const root=document.getElementById('content'); root.innerHTML='';
+  getDayGroups(DASH.week).forEach(group=>{
+    const sec=document.createElement('div'); sec.className='daysection';
+    const date=DASH.dates&&DASH.dates[group.day]?DASH.dates[group.day]:'';
+    sec.innerHTML=`<div class="dayhead">${group.title}<span class="date">${date}</span></div>`;
+    group.cats.forEach(key=>{
+      if(!DASH.categories[key]) return;
+      const card=buildCatCard(key);
+      card.id='catcard-'+key;
+      sec.appendChild(card);
+    });
+    root.appendChild(sec);
   });
 }
-function c_limit(key){ return ({mixed_doubles:6}[key])||12; }
 
-/* ── Leaderboard nav bar JS ── */
-
-function renderLeaderboard(data){
-  const sec = document.getElementById('leaderboardSection');
-  const wk  = lbWeek();
-  let cardInner, drawerContent;
-
-  if(data && data.paused){
-    cardInner = `<div class="lb-pause-msg">Please hang tight, we are currently updating your rankings!</div>`;
-    drawerContent = cardInner;
-  } else if(!data || (!data.girls.length && !data.boys.length)){
-    cardInner = `<div class="lb-empty">Rankings will appear once the season gets underway.</div>`;
-    drawerContent = cardInner;
-  } else {
-    const ri = n => n===1?'gold':n===2?'silver':n===3?'bronze':'';
-    const gc = data.girlsCutoff||12, bc = data.boysCutoff||36;
-
-    // Build a section list with rank, name, points and a separator at the cutoff
-    const buildList = (players, cutoff) => {
-      if(!players.length) return '<div class="lb-empty">No rankings yet.</div>';
-      const items = players.map((p,i)=>{
-        const sep = i===cutoff ? '<li class="lb-sep" aria-hidden="true"></li>' : '';
-        return sep+`<li data-name="${p.name.toLowerCase()}">
-          <span class="lb-rank ${ri(i+1)}">${i+1}</span>
-          <span class="lb-name">${p.name}</span>
-          <span class="lb-pts">${p.points}</span>
-        </li>`;
-      }).join('');
-      return `<ul class="lb-list">${items}</ul>`;
-    };
-
-    const rankingsHtml = `<div class="lb-cols">
-      <div class="lb-col"><h3 class="girls">Queens</h3>${buildList(data.girls,gc)}</div>
-      <div class="lb-col"><h3 class="boys">Kings</h3>${buildList(data.boys,bc)}</div>
-    </div>`;
-    cardInner    = `<div class="lb-cta-pill">CLICK HERE TO VIEW YOUR RANK!</div>`;
-    drawerContent = `<div class="lb-search-wrap">
-      <input class="lb-search" type="text" placeholder="Search your name…" oninput="filterLbSearch(this.value)">
-    </div>${rankingsHtml}`;
-  }
-
-  sec.innerHTML = `<div class="lb-card" onclick="openLbDrawer()">
-    <h2>HIVE Rankings</h2>
-    <div class="lbmeta">Standings as of Week ${wk}</div>
-    ${cardInner}
-  </div>`;
-
-  const db = document.getElementById('lbDrawerBody');
-  if(db) db.innerHTML = `<div style="margin-bottom:14px;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.1rem;">Standings as of Week ${wk}</div>${drawerContent}`;
-}
-
-
-function openLbDrawer(){
-  closeWpDrawer(); // never let both drawers stack
-  document.getElementById('lbDrawer').classList.add('open');
-  document.getElementById('lbDrawerOverlay').classList.add('show');
-  document.body.style.overflow = 'hidden';
-  // Swipe-down to close
-  const drawer = document.getElementById('lbDrawer');
-  let _ty = 0;
-  drawer._tsStart = e => { _ty = e.touches[0].clientY; };
-  drawer._tsEnd = e => { if(e.changedTouches[0].clientY - _ty > 70) closeLbDrawer(); };
-  drawer.addEventListener('touchstart', drawer._tsStart, {passive:true});
-  drawer.addEventListener('touchend', drawer._tsEnd, {passive:true});
-}
-function closeLbDrawer(){
-  const drawer = document.getElementById('lbDrawer');
-  drawer.classList.remove('open');
-  document.getElementById('lbDrawerOverlay').classList.remove('show');
-  document.body.style.overflow = '';
-  drawer.removeEventListener('touchstart', drawer._tsStart);
-  drawer.removeEventListener('touchend', drawer._tsEnd);
-}
-
-/* ============================================================
-   WHO'S PLAYING — public name list per category, own drawer
-   instance reusing the same slide-up mechanics as HIVE Rankings.
-   ============================================================ */
-let _wpCurrentKey = null;
-
-async function openWhoPlaying(key){
-  closeLbDrawer(); // never let both drawers stack
-  _wpCurrentKey = key;
-  const c = CATS[key];
-  document.getElementById('wpDrawerTitle').textContent = c ? c.label : "Who's Playing";
-  document.getElementById('wpDrawerBody').innerHTML = '<div class="lb-empty">Loading…</div>';
-
-  document.getElementById('wpDrawer').classList.add('open');
-  document.getElementById('wpDrawerOverlay').classList.add('show');
-  document.body.style.overflow = 'hidden';
-
-  const drawer = document.getElementById('wpDrawer');
-  let _ty = 0;
-  drawer._tsStart = e => { _ty = e.touches[0].clientY; };
-  drawer._tsEnd = e => { if(e.changedTouches[0].clientY - _ty > 70) closeWpDrawer(); };
-  drawer.addEventListener('touchstart', drawer._tsStart, {passive:true});
-  drawer.addEventListener('touchend', drawer._tsEnd, {passive:true});
-
-  await fetchWhoPlaying(key);
-}
-
-function closeWpDrawer(){
-  const drawer = document.getElementById('wpDrawer');
-  drawer.classList.remove('open');
-  document.getElementById('wpDrawerOverlay').classList.remove('show');
-  document.body.style.overflow = '';
-  drawer.removeEventListener('touchstart', drawer._tsStart);
-  drawer.removeEventListener('touchend', drawer._tsEnd);
-}
-
-async function fetchWhoPlaying(key){
-  const body = document.getElementById('wpDrawerBody');
+// PERF: update only one category card in-place (no full re-render)
+async function refreshCard(key){
   try{
-    const res = await fetch(BACKEND_URL+'?action=whoPlaying&week='+WEEK+'&category='+key);
-    const data = await res.json();
-    if(!data.ok){ body.innerHTML = '<div class="lb-empty">Could not load right now.</div>'; return; }
+    const res=await fetch(BACKEND_URL+'?action=dashboard');
+    DASH=await res.json();
+    const existing=document.getElementById('catcard-'+key);
+    if(!existing){render();return;}
+    const newCard=buildCatCard(key);
+    newCard.id='catcard-'+key;
+    existing.replaceWith(newCard);
+  }catch(e){ toast('Could not refresh'); }
+}
 
-    const slotLine = `<div class="wp-slotcount"><b>${data.filled}</b> / ${data.limit} filled</div>`;
-    if(!data.names.length){
-      body.innerHTML = slotLine + '<div class="lb-empty">No one has registered yet — be the first!</div>';
+function buildCatCard(key){
+  const c=DASH.categories[key];
+  const addLabel=c.type==='singles'?'Add a BEE':'Add a Pair of BEEs';
+  const card=document.createElement('div'); card.className='catcard';
+  card.innerHTML=`
+    <div class="cattop">
+      <div class="cattitle">${c.label} <span class="sub">· ${c.time}</span></div>
+      <div class="fillpill">${c.filled} / ${c.limit} filled</div>
+    </div>
+    <div class="table-scroll">${buildTable(key,c)}</div>
+    <div class="cardbtns">
+      <button class="addbtn" onclick="addSlot('${key}')">+ ${addLabel}</button>
+      <button class="drawbtn" onclick="openDrawConfig('${key}')">Generate Draw</button>
+    </div>`;
+  return card;
+}
+
+function buildTable(key,c){
+  if(c.rows.length===0) return '<div class="emptyrow">No registrations yet.</div>';
+  const hasData=r=>String(r.player1||'').trim()!=='';
+  let head,body='';
+  if(c.type==='doubles'){
+    head=`<tr><th>#</th><th>Player 1</th><th>Player 2</th><th>P1 DUPR</th><th>P2 DUPR</th>
+      <th>Avg</th><th>Slip</th><th>Pay P1</th><th>Pay P2</th><th></th></tr>`;
+    c.rows.forEach(r=>{ body+=`<tr><td>${r.num}</td>
+      <td>${txt(key,r.index,'player1',r.player1,180)}</td>
+      <td>${txt(key,r.index,'player2',r.player2,180)}</td>
+      <td>${num(key,r.index,'p1dupr',r.p1dupr)}</td>
+      <td>${num(key,r.index,'p2dupr',r.p2dupr)}</td>
+      <td><span class="avg" id="avg-${key}-${r.index}">${r.avg||'—'}</span></td>
+      <td>${slip(r.slip)}</td>
+      <td>${pay(key,r.index,'payconf1',r.payconf1)}</td>
+      <td>${pay(key,r.index,'payconf2',r.payconf2)}</td>
+      <td><div class="rowacts">${del(key,r.index)}${xdel(key,r.index,hasData(r))}</div></td></tr>`;});
+  }else if(c.type==='mixed'){
+    head=`<tr><th>#</th><th>Player 1</th><th>Player 2</th><th>Slip</th><th>Pay P1</th><th>Pay P2</th><th></th></tr>`;
+    c.rows.forEach(r=>{ body+=`<tr><td>${r.num}</td>
+      <td>${txt(key,r.index,'player1',r.player1,190)}</td>
+      <td>${txt(key,r.index,'player2',r.player2,190)}</td>
+      <td>${slip(r.slip)}</td>
+      <td>${pay(key,r.index,'payconf1',r.payconf1)}</td>
+      <td>${pay(key,r.index,'payconf2',r.payconf2)}</td>
+      <td><div class="rowacts">${del(key,r.index)}${xdel(key,r.index,hasData(r))}</div></td></tr>`;});
+  }else{
+    head=`<tr><th>#</th><th>Player 1</th><th>DUPR</th><th>Slip</th><th>Payment</th><th></th></tr>`;
+    c.rows.forEach(r=>{ body+=`<tr><td>${r.num}</td>
+      <td>${txt(key,r.index,'player1',r.player1,200)}</td>
+      <td>${num(key,r.index,'dupr',r.dupr)}</td>
+      <td>${slip(r.slip)}</td>
+      <td>${pay(key,r.index,'payconf',r.payconf)}</td>
+      <td><div class="rowacts">${del(key,r.index)}${xdel(key,r.index,hasData(r))}</div></td></tr>`;});
+  }
+  return `<table><thead>${head}</thead><tbody>${body}</tbody></table>`;
+}
+
+function esc(v){ return String(v==null?'':v).replace(/"/g,'&quot;'); }
+function txt(key,i,field,val,w){ return `<input type="text" style="min-width:${w}px" value="${esc(val)}" onkeydown="enterNext(event,this)" onchange="saveCell(this,'${key}',${i},'${field}')">`; }
+function num(key,i,field,val){ return `<input type="number" step="0.001" class="dupr" value="${esc(val)}" onkeydown="enterNext(event,this)" onchange="saveCell(this,'${key}',${i},'${field}')">`; }
+function pay(key,i,field,val){ const v=(val==='Paid')?'Paid':'Pending';
+  return `<select class="pay" data-v="${v}" onchange="this.setAttribute('data-v',this.value);saveCell(this,'${key}',${i},'${field}')">
+    <option ${v==='Pending'?'selected':''}>Pending</option><option ${v==='Paid'?'selected':''}>Paid</option></select>`; }
+function slip(url){ if(!url) return '<span class="sliplink none">none</span>';
+  return `<a class="sliplink" href="${esc(url)}" target="_blank" rel="noopener">View slip</a>`; }
+function del(key,i){ return `<button class="del" onclick="deleteRow('${key}',${i})">Delete</button>`; }
+function xdel(key,i,hasData){ return `<button class="xdel" onclick="removeSlot('${key}',${i},${hasData})" title="Remove this slot">X</button>`; }
+
+/* ---- Enter-to-next-field ---- */
+function enterNext(event,el){
+  if(event.key!=='Enter')return; event.preventDefault();
+  const inputs=Array.from(document.querySelectorAll('#content input[type=text],#content input[type=number]'));
+  const i=inputs.indexOf(el);
+  if(i>-1&&i<inputs.length-1)inputs[i+1].focus();else el.blur();
+}
+
+/* ======================== edits ======================== */
+// PERF: 400ms debounce on cell saves — prevents duplicate writes from fast typists
+function saveCell(el,key,index,field){
+  const k=`${key}_${index}_${field}`;
+  clearTimeout(_debounce[k]);
+  _debounce[k]=setTimeout(()=>_doSaveCell(el,key,index,field),400);
+}
+async function _doSaveCell(el,key,index,field){
+  try{
+    const res=await fetch(BACKEND_URL,{method:'POST',body:JSON.stringify({action:'update',week:DASH.week,category:key,index:index,field:field,value:el.value})});
+    const out=await res.json();
+    if(out.ok){
+      if(el.tagName==='INPUT'){el.classList.add('saved');setTimeout(()=>el.classList.remove('saved'),1000);}
+      if(out.avg!=null){const a=document.getElementById(`avg-${key}-${index}`);if(a)a.textContent=out.avg||'—';}
+      toast('Saved');
+    }else{failCell(el);toast(out.error||'Save failed');}
+  }catch(e){failCell(el);toast('Network error');}
+}
+function failCell(el){if(el.tagName==='INPUT'){el.classList.add('failed');setTimeout(()=>el.classList.remove('failed'),1500);}}
+
+async function deleteRow(key,index){
+  if(!confirm('Remove this entry? This frees the spot on the registration site.'))return;
+  try{
+    const res=await fetch(BACKEND_URL,{method:'POST',body:JSON.stringify({action:'delete',week:DASH.week,category:key,index:index})});
+    const out=await res.json();
+    if(out.ok){toast('Entry removed');refreshCard(key);}else toast(out.error||'Delete failed');
+  }catch(e){toast('Network error');}
+}
+async function addSlot(key){
+  try{
+    const res=await fetch(BACKEND_URL,{method:'POST',body:JSON.stringify({action:'addSlot',week:DASH.week,category:key})});
+    const out=await res.json();
+    if(out.ok){toast('Slot added');refreshCard(key);}else toast(out.error||'Could not add slot');
+  }catch(e){toast('Network error');}
+}
+async function removeSlot(key,index,hasData){
+  const msg=hasData?'This slot has a registration. Removing it will DELETE that entry AND remove the slot — capacity drops by one. Continue?':'Remove this empty slot? Capacity will drop by one.';
+  if(!confirm(msg))return;
+  try{
+    const res=await fetch(BACKEND_URL,{method:'POST',body:JSON.stringify({action:'removeSlot',week:DASH.week,category:key,index:index})});
+    const out=await res.json();
+    if(out.ok){toast('Slot removed');refreshCard(key);}else toast(out.error||'Could not remove slot');
+  }catch(e){toast('Network error');}
+}
+
+/* ======================== DRAW CONFIG POPUP ======================== */
+let _cfgKey=null, _cfgGroups=2, _cfgFinals=1;
+
+function openDrawConfig(key){
+  _cfgKey=key; _cfgGroups=2; _cfgFinals=1;
+  renderCfgPopup();
+  document.getElementById('cfgModal').classList.add('show');
+}
+function closeCfg(){ document.getElementById('cfgModal').classList.remove('show'); }
+
+function renderCfgPopup(){
+  const c=DASH.categories[_cfgKey];
+  const total=c.rows.filter(r=>String(r.player1||'').trim()!=='').length;
+  const ng=_cfgGroups;
+
+  // Build group size inputs
+  let grpHtml='<div class="grp-inputs">';
+  const letters='ABCD'.split('');
+  for(let g=0;g<ng;g++){
+    grpHtml+=`<div class="grp-inp-wrap">
+      <label>Group ${letters[g]} — players</label>
+      <input type="number" min="1" id="grp${g}" value="" placeholder="0" oninput="updateSum(${total})">
+    </div>`;
+  }
+  grpHtml+='</div>';
+  grpHtml+=`<div class="sum-pill err" id="sumPill">Total: 0 / ${total}</div>`;
+
+  // Finals selector (only for 4 groups)
+  const finalsHtml=ng===4?`
+    <h3>Number of Finals</h3>
+    <div class="segg">
+      <button class="fin ${_cfgFinals===1?'sel':''}" onclick="setCfgFinals(1)">1 Final</button>
+      <button class="fin ${_cfgFinals===2?'sel':''}" onclick="setCfgFinals(2)">2 Finals</button>
+    </div>`:'';
+
+  document.getElementById('cfgSheet').innerHTML=`
+    <h2>Draw Configuration</h2>
+    <div class="msub">${c.label} · Week ${DASH.week}</div>
+    <div class="cfgtotal">Total registered players: <b>${total}</b></div>
+    <h3>Number of Groups</h3>
+    <div class="segg">
+      ${[1,2,3,4].map(n=>`<button class="${n===ng?'sel':''}" onclick="setCfgGroups(${n},${total})">${n} ${n===1?'Group':'Groups'}</button>`).join('')}
+    </div>
+    ${grpHtml}
+    ${finalsHtml}
+    <div class="mbtns">
+      <button class="btn" onclick="closeCfg()">Cancel</button>
+      <button class="btn green" id="cfgConfirm" disabled onclick="confirmDraw()">Confirm Draw</button>
+    </div>`;
+}
+
+function setCfgGroups(n,total){ _cfgGroups=n; if(n!==4)_cfgFinals=1; renderCfgPopup(); updateSum(total); }
+function setCfgFinals(n){ _cfgFinals=n;
+  document.querySelectorAll('.fin').forEach(b=>b.classList.remove('sel'));
+  event.target.classList.add('sel'); }
+
+function updateSum(total){
+  let sum=0; const ng=_cfgGroups; const letters='ABCD'.split('');
+  let allFilled=true;
+  for(let g=0;g<ng;g++){
+    const inp=document.getElementById('grp'+g);
+    if(!inp)continue;
+    const v=parseInt(inp.value)||0;
+    sum+=v;
+    if(!inp.value.trim())allFilled=false;
+    inp.className=v>0?'ok':'';
+  }
+  const pill=document.getElementById('sumPill');
+  const ok=sum===total&&allFilled;
+  if(pill){pill.className='sum-pill '+(ok?'ok':'err');pill.textContent='Total: '+sum+' / '+total;}
+  const btn=document.getElementById('cfgConfirm');
+  if(btn)btn.disabled=!ok;
+}
+
+function getGroupSizes(){
+  const ng=_cfgGroups; const sizes=[];
+  for(let g=0;g<ng;g++){
+    const inp=document.getElementById('grp'+g);
+    sizes.push(parseInt(inp&&inp.value)||0);
+  }
+  return sizes;
+}
+
+async function confirmDraw(){
+  const btn=document.getElementById('cfgConfirm');
+  btn.disabled=true; btn.textContent='Generating…';
+  const groupSizes=getGroupSizes();
+  try{
+    const res=await fetch(BACKEND_URL,{method:'POST',body:JSON.stringify({
+      action:'previewDraw',week:DASH.week,category:_cfgKey,
+      groupSizes:groupSizes,numFinals:_cfgFinals,
+    })});
+    const out=await res.json();
+    if(!out.ok){
+      toast(out.error||'Could not generate draw');
+      btn.disabled=false; btn.textContent='Confirm Draw';
       return;
     }
-    const items = data.names.map((n,i)=>
-      `<li><span class="wp-num">${i+1}.</span>${n}</li>`).join('');
-    body.innerHTML = slotLine + `<ul class="wp-list">${items}</ul>`;
-  }catch(e){
-    body.innerHTML = '<div class="lb-empty">Network error — tap Reload to try again.</div>';
-  }
+    closeCfg();
+    LAST_DRAW=out.draw; LAST_DRAW.otp=out.otp; CURRENT_DRAW_KEY=_cfgKey;
+    renderDrawPreview(out.draw,out.otp,_cfgKey);
+  }catch(e){ toast('Network error'); btn.disabled=false; btn.textContent='Confirm Draw'; }
 }
 
-async function reloadWhoPlaying(){
-  if(!_wpCurrentKey) return;
-  const btn = document.getElementById('wpReloadBtn');
-  btn.classList.add('spin');
-  await fetchWhoPlaying(_wpCurrentKey);
-  setTimeout(()=>btn.classList.remove('spin'),650);
-}
-
-/* Real-time search — filters player rows in both Queens and Kings simultaneously */
-function filterLbSearch(query){
-  const q = query.toLowerCase().trim();
-  document.querySelectorAll('#lbDrawerBody .lb-list li').forEach(li => {
-    if(li.classList.contains('lb-sep')){ li.style.display=''; return; }
-    const name = li.dataset.name || '';
-    li.style.display = (!q || name.includes(q)) ? '' : 'none';
-  });
-}
-
-/* ---- open form ---- */
-function openForm(key){
-  current = key;
-  const c = CATS[key];
-  Object.keys(form).forEach(k=>delete form[k]);
-  document.getElementById('formTitle').textContent = c.label;
-  document.getElementById('formSched').innerHTML =
-    `${c.day}, ${dayDate(WEEK,c.offset)} · ${c.time}<br>${c.rule}`;
-  buildFields(c);
-  switchScreen('screenForm');
-  validate();
-}
-
-/* ---- build form fields ---- */
-function buildFields(c){
-  const box = document.getElementById('formFields');
-  const duprLabel = c.type==='singles' ? 'Singles DUPR Rating' : 'Doubles DUPR Rating';
-  const ex = c.ex || '3.000';
-  let html = `
-    <div class="field ac-field">
-      <label>Your Name</label>
-      <input type="text" id="nameInput" autocomplete="off" placeholder="e.g. Vibuda Jayathilake"
-        onkeydown="acKeyNav(event,'name')"
-        oninput="setVal('name',this.value); acShow('name',this.value)"
-        onfocus="acShow('name',this.value)" onblur="acHideDelayed('name')">
-      <div class="ac-list" id="acList-name"></div>
-    </div>
-    <div class="field">
-      <label>${duprLabel}</label>
-      <input type="number" step="0.001" placeholder="e.g. ${ex}" onkeydown="enterNext(event,this)" oninput="setVal('dupr',this.value)">
-    </div>
-    <div class="field">
-      <label>Gender</label>
-      <div class="seg" id="segGender">
-        <button type="button" data-c="cyan" onclick="pick(this,'gender','M')">Male</button>
-        <button type="button" data-c="pink" onclick="pick(this,'gender','F')">Female</button>
-      </div>
+/* ======================== DRAW PREVIEW ======================== */
+function renderDrawPreview(d,otp,key){
+  const c=DASH.categories[key];
+  let html=`<h2>${d.label} - Draw Preview</h2>
+    <div class="meta">Week ${d.week} · ${d.structure} · ${d.numGroups} group(s) · ${d.numFinals} final(s)</div>
+    <div class="otp-banner">Referee access code<b>${otp}</b>
+      <span>Share this with referees. Valid for this category all week.</span></div>
+    <div class="notebox" style="border-left:4px solid var(--cyan);">
+      This is a preview only — referees will keep seeing the previous committed draw
+      (or nothing, if none exists yet) until you press <b>Download .docx</b> below.
+      You can adjust the group config and re-preview as many times as you like before then.
     </div>`;
-  if(c.type !== 'singles'){
-    html += `
-    <div class="field ac-field">
-      <label>Partner's Name</label>
-      <input type="text" id="partnerNameInput" autocomplete="off" placeholder="Partner full name"
-        onkeydown="acKeyNav(event,'partnerName')"
-        oninput="setVal('partnerName',this.value); acShow('partnerName',this.value)"
-        onfocus="acShow('partnerName',this.value)" onblur="acHideDelayed('partnerName')">
-      <div class="ac-list" id="acList-partnerName"></div>
-    </div>
-    <div class="field">
-      <label>Partner's Gender</label>
-      <div class="seg" id="segPartnerGender">
-        <button type="button" data-c="cyan" onclick="pick(this,'partnerGender','M')">Male</button>
-        <button type="button" data-c="pink" onclick="pick(this,'partnerGender','F')">Female</button>
-      </div>
-    </div>
-    <div class="field">
-      <label>Partner's DUPR Rating <span class="opt">(optional)</span></label>
-      <input type="number" step="0.001" placeholder="Leave blank if unknown" onkeydown="enterNext(event,this)" oninput="setVal('partnerDupr',this.value)">
-    </div>
-    <div class="field">
-      <label>Payment</label>
-      <div class="seg">
-        <button type="button" data-c="lime" onclick="pick(this,'payBoth',false)">Paying for one</button>
-        <button type="button" data-c="lime" onclick="pick(this,'payBoth',true)">Paying for both</button>
-      </div>
-    </div>`;
-  }
-  html += `
-    <div class="field">
-      <label>Payment Slip <span class="opt">(image or PDF)</span></label>
-      <label class="file-btn" id="fileBtn">
-        <span class="ic">+</span>
-        <span id="fileLabel">Tap to attach your slip</span>
-        <input type="file" accept="image/*,application/pdf" onchange="pickFile(this)">
-      </label>
-    </div>`;
-  box.innerHTML = html;
-}
 
-/* ---- field handlers ---- */
-function setVal(k,v){ form[k]=v; validate(); }
-function pick(btn,k,v){
-  btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
-  btn.classList.add('sel'); form[k]=v; validate();
-}
-function pickFile(input){
-  const f=input.files[0]; if(!f) return;
-  form._file=f;
-  document.getElementById('fileLabel').textContent=f.name;
-  document.getElementById('fileBtn').classList.add('has');
-  validate();
-}
-function enterNext(event,el){
-  if(event.key!=='Enter') return; event.preventDefault();
-  const inputs=Array.from(document.querySelectorAll('#formFields input[type=text],#formFields input[type=number]'));
-  const i=inputs.indexOf(el);
-  if(i>-1&&i<inputs.length-1)inputs[i+1].focus(); else el.blur();
-}
+  // Seeding
+  html+=`<h3>Seeding</h3><table class="dtable"><tr><th>Seed</th><th>${c.type==='singles'?'Player':'Pair'}</th><th>${c.type==='mixed'?'Method':'Rating'}</th></tr>`;
+  d.seeds.forEach(t=>{html+=`<tr><td class="c">${t.rank}</td><td>${t.name}</td><td class="c">${c.type==='mixed'?'Random':(t.rating?Number(t.rating).toFixed(3):'—')}</td></tr>`;});
+  html+=`</table>`;
 
-/* ============================================================
-   NAME AUTOCOMPLETE — suggests names already in the season's
-   player directory (Points - Overall) to reduce typo-driven
-   duplicate entries that fragment a player's points.
-   ============================================================ */
-async function loadPlayerDirectory(){
-  try{
-    const res=await fetch(BACKEND_URL+'?action=playerDirectory');
-    const data=await res.json();
-    if(data&&data.ok&&Array.isArray(data.players)) PLAYER_DIRECTORY=data.players;
-  }catch(e){ /* silent — autocomplete is a convenience, not a requirement */ }
-}
+  // Groups
+  html+=`<h3>Groups</h3><table class="dtable"><tr>${d.groups.map(g=>`<th>${g.label}</th>`).join('')}</tr>`;
+  const maxLen=Math.max(...d.groups.map(g=>g.members.length));
+  for(let i=0;i<maxLen;i++) html+=`<tr>${d.groups.map(g=>`<td>${g.members[i]||''}</td>`).join('')}</tr>`;
+  html+=`</table>`;
 
-// field: 'name' or 'partnerName'
-const _acActiveIndex={name:-1,partnerName:-1};
+  // Group stage
+  html+=`<h3>Group Stage — Round Robin</h3><table class="dtable"><tr><th>Match</th><th>Court</th><th>Group</th><th>Team A</th><th>vs</th><th>Team B</th></tr>`;
+  d.groupStage.forEach(m=>{html+=`<tr><td class="c">${m.id}</td><td class="c">${m.court}</td><td class="c">${m.group}</td><td>${m.a}</td><td class="c" style="color:#888">vs</td><td>${m.b}</td></tr>`;});
+  html+=`</table>`;
 
-function acMatches(query){
-  const q=query.trim().toLowerCase();
-  if(!q) return [];
-  const starts=[], contains=[];
-  PLAYER_DIRECTORY.forEach(p=>{
-    const n=p.name.toLowerCase();
-    if(n.startsWith(q)) starts.push(p);
-    else if(n.includes(q)) contains.push(p);
-  });
-  // Prefix matches first, then substring matches, capped at 6 results
-  return starts.concat(contains).slice(0,6);
-}
+  // Knockout
+  html+=`<h3>Knockout Bracket</h3><table class="dtable"><tr><th>Stage</th><th>Court</th><th>Match</th></tr>`;
+  d.knockout.forEach(m=>{html+=`<tr><td>${m.stage}</td><td class="c">${m.court}</td><td>${m.a} vs ${m.b}</td></tr>`;});
+  html+=`</table>`;
 
-function acShow(field,query){
-  const list=document.getElementById('acList-'+field);
-  if(!list) return;
-  const matches=acMatches(query);
-  _acActiveIndex[field]=-1;
-  if(matches.length===0){ list.classList.remove('show'); list.innerHTML=''; return; }
-  list.innerHTML=matches.map((p,i)=>
-    `<div class="ac-item" data-i="${i}" onmousedown="acSelect('${field}',${i})">
-       <span>${p.name}</span><span class="ac-g ${p.gender}">${p.gender}</span>
-     </div>`).join('');
-  list._matches=matches;
-  list.classList.add('show');
-}
-
-function acHideDelayed(field){
-  // Delay so a click on an item (onmousedown) registers before the dropdown vanishes
-  setTimeout(()=>{
-    const list=document.getElementById('acList-'+field);
-    if(list) list.classList.remove('show');
-  },150);
-}
-
-function acSelect(field,index){
-  const list=document.getElementById('acList-'+field);
-  const p=list&&list._matches&&list._matches[index];
-  if(!p) return;
-  const inputId=field==='name'?'nameInput':'partnerNameInput';
-  const input=document.getElementById(inputId);
-  if(input) input.value=p.name;
-  setVal(field,p.name);
-
-  // Auto-fill gender (still editable — just pre-selects the toggle)
-  const genderKey=field==='name'?'gender':'partnerGender';
-  const segId=field==='name'?'segGender':'segPartnerGender';
-  const seg=document.getElementById(segId);
-  if(seg){
-    const btn=Array.from(seg.querySelectorAll('button'))
-      .find(b=>b.getAttribute('onclick').includes(`'${p.gender}'`));
-    if(btn) pick(btn,genderKey,p.gender);
-  }
-  list.classList.remove('show');
-}
-
-// Keyboard navigation: Up/Down to move through suggestions, Enter to select
-function acKeyNav(event,field){
-  const list=document.getElementById('acList-'+field);
-  const open=list&&list.classList.contains('show');
-  if(!open){ enterNext(event,event.target); return; }
-
-  const items=Array.from(list.querySelectorAll('.ac-item'));
-  if(event.key==='ArrowDown'){
-    event.preventDefault();
-    _acActiveIndex[field]=Math.min(_acActiveIndex[field]+1,items.length-1);
-    items.forEach((it,i)=>it.classList.toggle('active',i===_acActiveIndex[field]));
-  }else if(event.key==='ArrowUp'){
-    event.preventDefault();
-    _acActiveIndex[field]=Math.max(_acActiveIndex[field]-1,0);
-    items.forEach((it,i)=>it.classList.toggle('active',i===_acActiveIndex[field]));
-  }else if(event.key==='Enter'){
-    if(_acActiveIndex[field]>-1){
-      event.preventDefault();
-      acSelect(field,_acActiveIndex[field]);
-    }else{
-      list.classList.remove('show');
-      enterNext(event,event.target);
-    }
-  }else if(event.key==='Escape'){
-    list.classList.remove('show');
-  }
-}
-
-/* ---- live validation ---- */
-function validate(){
-  const c=CATS[current]; if(!c) return;
-  const btn=document.getElementById('submitBtn');
-  const errEl=document.getElementById('tierErr');
-  errEl.classList.remove('show');
-  let ok=form.name&&form.dupr&&form.gender&&form._file;
-  if(c.type!=='singles') ok=ok&&form.partnerName&&form.partnerGender&&(form.payBoth!==undefined);
-
-  // DUPR tier block (tierStrict = strictly below tierMax)
-  const r=parseFloat(form.dupr);
-  if(form.dupr&&!isNaN(r)){
-    if(c.tierMax!==undefined){
-      const blocked=c.tierStrict?(r>=c.tierMax):(r>c.tierMax);
-      if(blocked){
-        errEl.textContent=c.tierStrict
-          ?'This category requires DUPR below '+c.tierMax+'. Yours is '+r+'.'
-          :'This category is for DUPR '+c.tierMax+' & below. Yours is '+r+'.';
-        errEl.classList.add('show'); ok=false;
-      }
-    }
-    if(c.tierMin!==undefined&&r<c.tierMin){
-      errEl.textContent='This category is for DUPR '+c.tierMin+' & above. Yours is '+r+'.';
-      errEl.classList.add('show'); ok=false;
-    }
-  }
-  btn.disabled=!ok;
-}
-
-/* ============================================================
-   PERF: Image compression before base64 encoding.
-   Images → max 1200px, 80% JPEG quality (~100-300KB).
-   PDFs → passed through unchanged.
-   ============================================================ */
-async function compressImage(file){
-  if(!file.type.startsWith('image/')) return file; // PDFs pass through
-  return new Promise((res)=>{
-    const img=new Image(), url=URL.createObjectURL(file);
-    img.onload=()=>{
-      try{
-        const MAX=1200, scale=Math.min(1,MAX/img.width);
-        const canvas=document.createElement('canvas');
-        canvas.width=Math.round(img.width*scale);
-        canvas.height=Math.round(img.height*scale);
-        canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
-        URL.revokeObjectURL(url);
-        canvas.toBlob(blob=>{
-          if(!blob){res(file);return;}
-          res(new File([blob],file.name.replace(/\.[^.]+$/,'.jpg'),{type:'image/jpeg'}));
-        },'image/jpeg',0.80);
-      }catch(e){URL.revokeObjectURL(url);res(file);}
-    };
-    img.onerror=()=>{URL.revokeObjectURL(url);res(file);};
-    img.src=url;
-  });
-}
-
-/* ---- submit ---- */
-async function submitEntry(){
-  const btn=document.getElementById('submitBtn');
-  // PERF: submit guard — disable immediately, show compression message
-  btn.disabled=true;
-  btn.textContent='Preparing your slip...';
-
-  let file=form._file;
-  try{ file=await compressImage(file); }catch(e){ /* fallback to original */ }
-
-  showOverlay();
-  const base64=await fileToBase64(file);
-
-  const payload={
-    category:current, name:form.name, dupr:form.dupr, gender:form.gender,
-    partnerName:form.partnerName||'', partnerGender:form.partnerGender||'',
-    partnerDupr:form.partnerDupr||'', payingForBoth:form.payBoth===true,
-    fileBase64:base64, fileName:file.name, mimeType:file.type,
+  // Note
+  const notes={
+    '3group':'Qualifier 7 = best 3rd-placed team across groups. Qualifier 8 = second-best. Ranked by wins then net points.',
+    '1group':'Top 4 advance. SF1 winner goes direct to Final. SF2 winner plays SF1 loser — winner advances to Final.',
+    '4group-2finals':'Two simultaneous Finals — no semifinal round.',
   };
+  if(notes[d.structure]) html+=`<div class="notebox">${notes[d.structure]}</div>`;
+  html+=`<div class="notebox">Times are auto-calculated at 15-minute intervals from the category start time. Adjust on the night as needed.</div>`;
 
-  const [,result]=await Promise.all([animateBar(2000),postEntry(payload)]);
-
-  // Restore button regardless of outcome
-  btn.textContent='Reserve my spot';
-  validate(); // re-enables if fields still valid
-
-  if(result&&result.ok){
-    finishSuccess();
-    if(result.slots) slots=result.slots;
-  }else{
-    finishError(result&&result.error?result.error:'Something went wrong. Please try again.');
-  }
+  html+=`<div class="mbtns">
+    <button class="btn" onclick="closeDrawPreview()">Close</button>
+    <button class="btn green" id="downloadBtn" onclick="downloadDraw()">Download .docx</button>
+  </div>`;
+  document.getElementById('drawSheet').innerHTML=html;
+  document.getElementById('drawModal').classList.add('show');
 }
+function closeDrawPreview(){ document.getElementById('drawModal').classList.remove('show'); }
 
-async function postEntry(payload){
-  // PERF: 30-second timeout with friendly message
-  const ctrl=new AbortController();
-  const timer=setTimeout(()=>ctrl.abort(),30000);
+/* ======================== STYLED .docx DOWNLOAD ======================== */
+async function downloadDraw(){
+  const d=LAST_DRAW; if(!d) return;
+  const btn=document.getElementById('downloadBtn');
+
+  // Commit the exact previewed draft to live BEFORE building the file.
+  // This is the one moment referees' view actually changes — guaranteeing
+  // the downloaded .docx and what Website 3 shows are always identical.
+  if(btn){ btn.disabled=true; btn.textContent='Committing draw…'; }
   try{
-    const res=await fetch(BACKEND_URL,{method:'POST',body:JSON.stringify(payload),signal:ctrl.signal});
-    clearTimeout(timer);
-    return await res.json();
+    const res=await fetch(BACKEND_URL,{method:'POST',body:JSON.stringify({
+      action:'commitDraw',week:DASH.week,category:CURRENT_DRAW_KEY,
+    })});
+    const out=await res.json();
+    if(!out.ok){
+      toast(out.error||'Could not commit this draw');
+      if(btn){ btn.disabled=false; btn.textContent='Download .docx'; }
+      return; // do NOT download — nothing changed for referees either
+    }
   }catch(e){
-    clearTimeout(timer);
-    if(e.name==='AbortError')
-      return {ok:false,error:'Taking too long — check your connection and try again.'};
-    return {ok:false,error:'Network error. Check your connection and try again.'};
+    toast('Network error — draw was not committed');
+    if(btn){ btn.disabled=false; btn.textContent='Download .docx'; }
+    return;
   }
+  if(btn){ btn.textContent='Preparing document…'; }
+
+  await buildAndDownloadDocx(d);
+  if(btn){ btn.disabled=false; btn.textContent='Download .docx'; }
 }
 
-/* ---- overlay animation ---- */
-function showOverlay(){
-  const box=document.getElementById('loadbox');
-  box.classList.remove('done','error');
-  document.getElementById('loadMsg').textContent='Reserving your spot at the HIVE';
-  document.getElementById('loadErr').textContent='';
-  document.getElementById('fill').style.width='0%';
-  document.getElementById('overlay').classList.add('show');
-}
-function animateBar(ms){
-  return new Promise(res=>{
-    const fill=document.getElementById('fill'); let p=0;
-    const t=setInterval(()=>{ p++; fill.style.width=p+'%'; if(p>=100){clearInterval(t);res();}},ms/100);
+function buildAndDownloadDocx(d){
+  if(typeof docx==='undefined'){toast('Draw library loading — try again in a moment.');return;}
+  const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,HeadingLevel,AlignmentType,ShadingType,BorderStyle} = docx;
+
+  const DARK='1A2744', WHITE='FFFFFF', LIME='8BB800', PINK='FF2E9A', CYAN='12CCCC', ORANGE='FF8F00';
+  const categoryColor = (type,accent) => ({lime:LIME,pink:PINK,cyan:CYAN,orange:ORANGE}[accent]||LIME);
+  const catColor = categoryColor(d.type, DASH.categories[CURRENT_DRAW_KEY]&&DASH.categories[CURRENT_DRAW_KEY].accent||'lime');
+
+  // Helper builders
+  const shading=(color)=>({type:ShadingType.CLEAR,color:'auto',fill:color});
+  const borders=(color)=>({top:{style:BorderStyle.SINGLE,size:6,color:color},bottom:{style:BorderStyle.SINGLE,size:6,color:color},left:{style:BorderStyle.SINGLE,size:6,color:color},right:{style:BorderStyle.SINGLE,size:6,color:color}});
+  const cell=(text,opts={})=>new TableCell({
+    shading:opts.bg?shading(opts.bg):undefined,
+    borders:opts.border?borders(opts.border||'CCCCCC'):undefined,
+    width:opts.w?{size:opts.w,type:WidthType.PERCENTAGE}:undefined,
+    children:[new Paragraph({alignment:opts.center?AlignmentType.CENTER:AlignmentType.LEFT,
+      children:[new TextRun({text:String(text||''),bold:!!opts.bold,color:opts.color||'000000',size:opts.size||20})]})]
   });
-}
-function finishSuccess(){
-  const box=document.getElementById('loadbox');
-  box.classList.add('done');
-  document.getElementById('loadMsg').textContent='Spot Reserved at the HIVE';
-  setTimeout(()=>{ document.getElementById('overlay').classList.remove('show'); goSelect(); renderCards(); },1000);
-}
-function finishError(msg){
-  const box=document.getElementById('loadbox');
-  box.classList.add('error');
-  document.getElementById('loadMsg').textContent='Could not reserve';
-  document.getElementById('loadErr').textContent=msg;
-  setTimeout(()=>document.getElementById('overlay').classList.remove('show'),2500);
-}
+  const row=(...cells)=>new TableRow({children:cells});
+  const P=(text,opts={})=>new Paragraph({alignment:opts.center?AlignmentType.CENTER:AlignmentType.LEFT,
+    spacing:{before:opts.before||0,after:opts.after||100},
+    children:[new TextRun({text:String(text||''),bold:!!opts.bold,size:opts.size||20,color:opts.color||'000000',font:opts.font||'Calibri'})]});
+  const spacer=()=>new Paragraph({text:'',spacing:{after:80}});
 
-/* ---- helpers ---- */
-function fileToBase64(file){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=()=>res(r.result.split(',')[1]);
-    r.onerror=rej; r.readAsDataURL(file);
+  const kids=[];
+
+  // === COVER PAGE ===
+  // Dark header bar simulation
+  kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[row(
+    cell('PickleBee by 71\nDUPR Night Draw System\nDesigned & Developed by Z2H x Real Solutions',{bg:DARK,color:WHITE,bold:true,size:22,w:75}),
+    cell('Z2H x REALSOLUTIONS',{bg:CYAN,color:DARK,bold:true,center:true,size:20,w:25})
+  )]}));
+  kids.push(spacer());
+  kids.push(P(`DUPR Night ${d.label} — Draw`,{bold:true,size:36,center:true}));
+  kids.push(P(new Date().toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),{center:true,size:20,color:'666666'}));
+  kids.push(spacer());
+
+  // Mode + Total pills
+  kids.push(new Table({width:{size:60,type:WidthType.PERCENTAGE},rows:[row(
+    cell('Mode: '+(d.type.charAt(0).toUpperCase()+d.type.slice(1)),{bg:'F0F0F0',size:20}),
+    cell('Total: '+d.seeds.length+' Players',{bg:'F0F0F0',size:20}),
+    cell('Structure: '+d.structure,{bg:'F0F0F0',size:20}),
+  )]}));
+  kids.push(spacer());
+
+  // OTP banner
+  kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[row(
+    cell('REFEREE ACCESS CODE — OTP: '+d.otp+'\nShare with referees. Valid for the entire week.',{bg:catColor,color:WHITE,bold:true,size:24,center:true})
+  )]}));
+  kids.push(spacer());
+
+  // Summary per group
+  kids.push(P('Groups Summary',{bold:true,size:24}));
+  d.groups.forEach(g=>{
+    const matchCount=d.groupStage.filter(m=>m.group===g.label).length;
+    // Derive court from actual match data (not hardcoded by letter)
+    const gCourt=(d.groupStage.find(m=>m.group===g.label)||{}).court||'Court N';
+    kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[
+      row(cell(g.label+' - '+g.members.length+' participants - '+matchCount+' round-robin matches - '+gCourt,{bg:catColor,color:WHITE,bold:true,size:20}))
+    ]}));
+    kids.push(spacer());
   });
-}
-function switchScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function goSelect(){ switchScreen('screenSelect'); }
 
-/* ---- init ---- */
-loadSlots();
-loadLeaderboard();
-loadPlayerDirectory();
+  // === PER GROUP PAGES ===
+  d.groups.forEach((g,gi)=>{
+    kids.push(new Paragraph({pageBreakBefore:gi>0,text:'',spacing:{after:80}}));
+
+    // Category header (em dash replaced with regular dash)
+    kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[
+      row(cell(d.label+' - '+g.label,{bg:DARK,color:WHITE,bold:true,size:26}))
+    ]}));
+    kids.push(spacer());
+
+    // Court derived from actual match data (Fix 3: no more hardcoded A/B=N, C=B)
+    const courtLabel=(d.groupStage.find(m=>m.group===g.label)||{}).court||'Court N';
+    kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[
+      row(cell(courtLabel+' · '+g.members.length+' players',{bg:catColor,color:WHITE,bold:true,size:22}))
+    ]}));
+    kids.push(P('PARTICIPANTS',{bold:true,color:catColor,size:18,before:120}));
+
+    g.members.forEach((name,mi)=>{
+      const seed=d.seeds.find(s=>s.name===name);
+      const rating=seed&&seed.rating?Number(seed.rating).toFixed(3):'';
+      kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[row(
+        cell((mi+1)+'.  '+name,{size:20}),
+        cell(rating?'DUPR '+rating:'',{size:20,color:catColor,bold:true,center:true,w:20})
+      )]}));
+    });
+
+    // Round robin schedule (Fix 4: time column added before match ID)
+    const groupMatches=d.groupStage.filter(m=>m.group===g.label);
+    kids.push(spacer());
+    kids.push(P('ROUND ROBIN SCHEDULE - '+groupMatches.length+' MATCHES',{bold:true,color:catColor,size:18}));
+    groupMatches.forEach((m,mi)=>{
+      kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[row(
+        cell(m.time,{size:16,center:true,color:'444444',w:14}),
+        cell(m.id,{bg:catColor,color:WHITE,bold:true,size:16,center:true,w:9}),
+        cell(m.a,{size:18,w:34}),
+        cell('vs',{size:16,color:catColor,center:true,w:9}),
+        cell(m.b,{size:18,w:34})
+      )]}));
+    });
+
+    // Blank standings table
+    kids.push(spacer());
+    kids.push(P('STANDINGS (FILL IN DURING PLAY)',{bold:true,color:catColor,size:18}));
+    kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[
+      row(
+        cell('Player / Pair',{bg:DARK,color:WHITE,bold:true,size:18,w:55}),
+        cell('W',{bg:DARK,color:WHITE,bold:true,center:true,size:18,w:12}),
+        cell('L',{bg:DARK,color:WHITE,bold:true,center:true,size:18,w:11}),
+        cell('Pts',{bg:DARK,color:WHITE,bold:true,center:true,size:18,w:11}),
+        cell('Rank',{bg:DARK,color:WHITE,bold:true,center:true,size:18,w:11}),
+      ),
+      ...g.members.map(name=>row(
+        cell(name,{size:18}),
+        cell('___',{center:true,color:'AAAAAA',size:16}),
+        cell('___',{center:true,color:'AAAAAA',size:16}),
+        cell('___',{center:true,color:'AAAAAA',size:16}),
+        cell('___',{center:true,color:'AAAAAA',size:16}),
+      ))
+    ]}));
+  });
+
+  // === KNOCKOUT PAGE === (Fix 5: time column added to every match row)
+  kids.push(new Paragraph({pageBreakBefore:true,text:'',spacing:{after:80}}));
+  kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[
+    row(cell('KNOCKOUT STAGE',{bg:DARK,color:WHITE,bold:true,size:28,center:true}))
+  ]}));
+  kids.push(spacer());
+
+  const stages=[...new Set(d.knockout.map(m=>m.stage))];
+  stages.forEach(stage=>{
+    const stageMoves=d.knockout.filter(m=>m.stage===stage);
+    const stageLabel=stage==='final'?'FINAL - BEE OF THE COURT':
+      stage==='final1'?'FINAL 1':stage==='final2'?'FINAL 2':
+      stage.toUpperCase().replace('QF','QUARTERFINAL ').replace('SF','SEMI FINAL ').replace('CON','CONSOLATION');
+    kids.push(P(stageLabel,{bold:true,size:22,before:160}));
+    stageMoves.forEach(m=>{
+      kids.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[row(
+        cell(m.time||'',{size:16,center:true,color:'444444',w:14}),
+        cell(m.a,{size:18,w:36}),
+        cell('vs',{size:16,color:catColor,center:true,w:14}),
+        cell(m.b,{size:18,w:36}),
+      )]}));
+    });
+    kids.push(spacer());
+  });
+
+  // Footer note
+  kids.push(P('PickleBee by 71 · DUPR Night Draw System · Designed & Developed by Z2H x RealSolutions',{center:true,size:16,color:'999999'}));
+
+  const doc=new Document({sections:[{children:kids}]});
+  return Packer.toBlob(doc).then(blob=>{
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url;
+    a.download=(d.label.replace(/[^a-z0-9]+/gi,'_'))+'_Week'+d.week+'_Draw.docx';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    toast('Draw downloaded');
+  }).catch(()=>toast('Could not build the .docx — try again.'));
+}
+
+/* ======================== toast ======================== */
+let toastT;
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),1900); }
+
+loadDashboard();
 </script>
-<!-- Mobile leaderboard drawer -->
-<div class="lb-drawer-overlay" id="lbDrawerOverlay" onclick="closeLbDrawer()"></div>
-<div class="lb-drawer" id="lbDrawer">
-  <div class="lb-drawer-handle-bar"></div>
-  <div class="lb-drawer-topbar">
-    <span class="lb-drawer-title">HIVE Rankings</span>
-    <button class="lb-drawer-close" onclick="closeLbDrawer()">Close</button>
-  </div>
-  <div class="lb-drawer-body" id="lbDrawerBody"></div>
-</div>
-
-<!-- Who's Playing drawer -->
-<div class="lb-drawer-overlay" id="wpDrawerOverlay" onclick="closeWpDrawer()"></div>
-<div class="lb-drawer" id="wpDrawer">
-  <div class="lb-drawer-handle-bar"></div>
-  <div class="lb-drawer-topbar">
-    <span class="lb-drawer-title" id="wpDrawerTitle">Who's Playing</span>
-    <div class="wp-topbar-right">
-      <button class="wp-reload" id="wpReloadBtn" onclick="reloadWhoPlaying()">
-        <span class="wp-reload-icon">&#8635;</span> Reload
-      </button>
-      <button class="lb-drawer-close" onclick="closeWpDrawer()">Close</button>
-    </div>
-  </div>
-  <div class="lb-drawer-body" id="wpDrawerBody"></div>
-</div>
 </body>
 </html>
