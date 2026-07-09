@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DUPR Nights · PickleBee by 71</title>
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">bac
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="shortcut icon" href="/favicon.ico">
@@ -75,6 +75,15 @@ h1 .hl{color:var(--pink);}
   background:var(--surface-2);box-shadow:var(--clay-sm);border:none;
   border-radius:var(--r-sm);padding:11px 10px;cursor:pointer;transition:all .15s ease;}
 .who-btn:hover{color:var(--ink);background:#e3edda;transform:translateY(-1px);}
+/* Button colour matches its card's accent */
+.who-btn[data-accent=lime]{color:var(--lime-deep);}
+.who-btn[data-accent=lime]:hover{background:#e3f2c2;}
+.who-btn[data-accent=pink]{color:var(--pink);}
+.who-btn[data-accent=pink]:hover{background:#ffe1ef;}
+.who-btn[data-accent=cyan]{color:#0aa8a8;}
+.who-btn[data-accent=cyan]:hover{background:#d4f5f5;}
+.who-btn[data-accent=orange]{color:var(--orange);}
+.who-btn[data-accent=orange]:hover{background:#ffe9c2;}
 
 /* ═══ HIVE RANKINGS NAV BAR (fixed bottom — PC + Mobile) ═══ */
 
@@ -388,6 +397,16 @@ function eventCutoff(week, offset){
 }
 function isLocked(c){ return nowInColombo().getTime() > eventCutoff(WEEK, c.offset).getTime(); }
 
+// An event is considered "done" once its calendar day has fully passed
+// (i.e. from midnight the following day) — used to switch the
+// "SEE WHO IS PLAYING" button to "SEE WHO PLAYED".
+function isEventDone(c){
+  const d = new Date(WEEK14_START);
+  d.setDate(d.getDate() + (WEEK-14)*7 + c.offset + 1); // start of the NEXT day
+  d.setHours(0,0,0,0);
+  return nowInColombo().getTime() >= d.getTime();
+}
+
 /* ---- load slot counts + leaderboard on open ---- */
 async function loadSlots(){
   // PERF: 10-second timeout on initial load
@@ -442,7 +461,7 @@ function renderCards(){
              <div class="left"><b>${left}</b> ${left===1?'spot':'spots'} left</div>
              ${hurry?'<div class="hurry">Hurry! Only '+left+' left</div>':''}
            </div>`}
-      <button class="who-btn" onclick="event.stopPropagation();openWhoPlaying('${key}')">SEE WHO IS PLAYING</button>`;
+      <button class="who-btn" data-accent="${c.accent}" onclick="event.stopPropagation();openWhoPlaying('${key}')">${isEventDone(c) ? 'SEE WHO PLAYED' : 'SEE WHO IS PLAYING'}</button>`;
     if(!full && !locked) card.onclick = ()=>openForm(key);
     grid.appendChild(card);
   });
