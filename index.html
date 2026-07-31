@@ -30,7 +30,7 @@ body{
     radial-gradient(circle at 88% 92%,rgba(18,204,204,.10),transparent 42%),var(--bg);
   -webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:1080px;margin:0 auto;}
+.wrap{max-width:1080px;margin:0 auto;position:relative;z-index:1;}
 header{text-align:center;margin-bottom:30px;}
 .logo{width:108px;height:108px;object-fit:contain;background:var(--surface);border-radius:50%;
   box-shadow:var(--clay);padding:14px;margin:0 auto 18px;display:block;}
@@ -286,6 +286,7 @@ input[type=file]{display:none;}
 </style>
 </head>
 <body>
+<canvas id="fireworksCanvas" style="position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0;display:none;"></canvas>
 <div class="wrap">
   <header>
     <img src="./picklebee-logo.png" class="logo" alt="PickleBee by 71" onerror="this.style.display='none'">
@@ -329,6 +330,94 @@ input[type=file]{display:none;}
    PASTE YOUR APPS SCRIPT /exec URL HERE
    ============================================================ */
 const BACKEND_URL = "https://script.google.com/macros/s/AKfycbzeZaUXvfqsA1oVqwwnSxdn_JJrYnCJQ5-3vA0-TCJSjMZUP2tRMEl-PawqlxZ5opGbXg/exec";
+
+/* ============================================================
+   FIREWORKS — Week 21 only (National Pickleball Day celebration).
+   Continuous, full-page, brand-colored particle bursts behind all
+   content. Auto-expires the moment WEEK !== 21 — nothing to turn
+   off manually next week. Respects prefers-reduced-motion and
+   pauses when the browser tab isn't visible (saves battery/CPU).
+   ============================================================ */
+const FIREWORK_COLORS = ['#a8d600','#ff2e9a','#12cccc','#ff8f00','#8bb800'];
+let fwCanvas=null, fwCtx=null, fwParticles=[], fwRunning=false, fwLaunchTimer=null;
+
+function initFireworks(){
+  fwCanvas=document.getElementById('fireworksCanvas');
+  if(!fwCanvas) return;
+  fwCtx=fwCanvas.getContext('2d');
+  resizeFireworksCanvas();
+  window.addEventListener('resize', resizeFireworksCanvas);
+  fwCanvas.style.display='block';
+
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(prefersReducedMotion){
+    // Accessibility: a couple of gentle static bursts, no continuous animation
+    launchFirework(); setTimeout(launchFirework,600);
+    return;
+  }
+
+  fwRunning=true;
+  scheduleNextLaunch();
+  requestAnimationFrame(fireworksLoop);
+
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden){
+      fwRunning=false;
+      if(fwLaunchTimer) clearTimeout(fwLaunchTimer);
+    }else if(!fwRunning){
+      fwRunning=true;
+      scheduleNextLaunch();
+      requestAnimationFrame(fireworksLoop);
+    }
+  });
+}
+
+function resizeFireworksCanvas(){
+  if(!fwCanvas) return;
+  fwCanvas.width=window.innerWidth;
+  fwCanvas.height=window.innerHeight;
+}
+
+function scheduleNextLaunch(){
+  if(!fwRunning) return;
+  const delay=900+Math.random()*1400; // staggered bursts — lively, not overwhelming
+  fwLaunchTimer=setTimeout(()=>{ launchFirework(); scheduleNextLaunch(); }, delay);
+}
+
+function launchFirework(){
+  if(!fwCanvas) return;
+  const x=fwCanvas.width*(0.15+Math.random()*0.7);
+  const y=fwCanvas.height*(0.2+Math.random()*0.35);
+  const color=FIREWORK_COLORS[Math.floor(Math.random()*FIREWORK_COLORS.length)];
+  const count=34+Math.floor(Math.random()*18);
+  for(let i=0;i<count;i++){
+    const angle=(Math.PI*2*i)/count+Math.random()*0.2;
+    const speed=2+Math.random()*3.2;
+    fwParticles.push({
+      x,y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed,
+      life:1, decay:0.010+Math.random()*0.012, color, size:1.6+Math.random()*1.6,
+    });
+  }
+}
+
+function fireworksLoop(){
+  if(!fwRunning) return;
+  fwCtx.clearRect(0,0,fwCanvas.width,fwCanvas.height);
+  for(let i=fwParticles.length-1;i>=0;i--){
+    const p=fwParticles[i];
+    p.vy+=0.045; // gravity
+    p.x+=p.vx; p.y+=p.vy;
+    p.life-=p.decay;
+    if(p.life<=0){ fwParticles.splice(i,1); continue; }
+    fwCtx.globalAlpha=Math.max(p.life,0);
+    fwCtx.fillStyle=p.color;
+    fwCtx.beginPath();
+    fwCtx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    fwCtx.fill();
+  }
+  fwCtx.globalAlpha=1;
+  requestAnimationFrame(fireworksLoop);
+}
 
 /* ---- week anchor (fallback only, for the leaderboard's week-number
    display before loadSlots() resolves — actual schedule now comes
@@ -394,8 +483,10 @@ async function loadSlots(){
     const data = await res.json();
     WEEK = data.week;
     slots = data;
-    document.getElementById('welcome').innerHTML =
-      `Welcome to the <span class="hl">Week ${WEEK}</span> of DUPR at PickleBee by 71`;
+    document.getElementById('welcome').innerHTML = (WEEK===21)
+      ? `Welcome to <span class="hl">Week 21</span>, the Biggest DUPR Week at PickleBee by 71!`
+      : `Welcome to the <span class="hl">Week ${WEEK}</span> of DUPR at PickleBee by 71`;
+    if(WEEK===21) initFireworks(); // National Pickleball Day — Week 21 only, auto-expires after
     renderCards();
   }catch(e){
     document.getElementById('catGrid').innerHTML =
