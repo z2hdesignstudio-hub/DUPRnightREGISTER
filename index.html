@@ -806,13 +806,13 @@ function buildFields(c){
   }
   html += `
     <div class="field">
-  <label>Payment Slip <span class="opt">(image or PDF)</span> <span class="price-tag">2,500 LKR pp</span></label>
-  <label class="file-btn" id="fileBtn">
-    <span class="ic">+</span>
-    <span id="fileLabel">Tap to attach your slip</span>
-    <input type="file" accept="image/*,application/pdf" onchange="pickFile(this)">
-  </label>
-</div>
+      <label>Payment Slip <span class="opt">(image or PDF)</span> <span class="price-tag">2,500 LKR pp</span></label>
+      <label class="file-btn" id="fileBtn">
+        <span class="ic">+</span>
+        <span id="fileLabel">Tap to attach your slip</span>
+        <input type="file" accept="image/*,application/pdf" onchange="pickFile(this)">
+      </label>
+    </div>`;
   box.innerHTML = html;
 }
 
