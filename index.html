@@ -237,6 +237,7 @@ h1 .hl{color:var(--pink);}
 .field{margin-bottom:18px;}
 .field label{display:block;font-weight:800;font-size:.92rem;margin-bottom:8px;color:var(--ink);}
 .field .opt{color:var(--muted);font-weight:600;font-size:.82rem;}
+.price-tag{color:var(--lime-deep);font-weight:800;font-size:.82rem;}
 input[type=text],input[type=number]{width:100%;font-family:'Nunito',sans-serif;font-size:1rem;
   font-weight:600;color:var(--ink);padding:14px 16px;border:none;border-radius:var(--r-sm);
   background:var(--surface-2);box-shadow:var(--clay-in);outline:none;}
@@ -805,13 +806,13 @@ function buildFields(c){
   }
   html += `
     <div class="field">
-      <label>Payment Slip <span class="opt">(image or PDF)</span></label>
-      <label class="file-btn" id="fileBtn">
-        <span class="ic">+</span>
-        <span id="fileLabel">Tap to attach your slip</span>
-        <input type="file" accept="image/*,application/pdf" onchange="pickFile(this)">
-      </label>
-    </div>`;
+  <label>Payment Slip <span class="opt">(image or PDF)</span> <span class="price-tag">2,500 LKR pp</span></label>
+  <label class="file-btn" id="fileBtn">
+    <span class="ic">+</span>
+    <span id="fileLabel">Tap to attach your slip</span>
+    <input type="file" accept="image/*,application/pdf" onchange="pickFile(this)">
+  </label>
+</div>
   box.innerHTML = html;
 }
 
