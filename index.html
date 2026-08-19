@@ -238,6 +238,10 @@ h1 .hl{color:var(--pink);}
 .field label{display:block;font-weight:800;font-size:.92rem;margin-bottom:8px;color:var(--ink);}
 .field .opt{color:var(--muted);font-weight:600;font-size:.82rem;}
 .price-tag{color:var(--lime-deep);font-weight:800;font-size:.82rem;}
+.dupr-hint{color:var(--muted);font-weight:600;font-size:.78rem;margin-top:6px;}
+.dupr-toggle-label{display:flex;align-items:center;gap:8px;margin-top:10px;
+  font-weight:700;font-size:.85rem;color:var(--ink);cursor:pointer;}
+.dupr-toggle-label input[type=checkbox]{width:18px;height:18px;accent-color:var(--cyan);cursor:pointer;}
 input[type=text],input[type=number]{width:100%;font-family:'Nunito',sans-serif;font-size:1rem;
   font-weight:600;color:var(--ink);padding:14px 16px;border:none;border-radius:var(--r-sm);
   background:var(--surface-2);box-shadow:var(--clay-in);outline:none;}
@@ -769,6 +773,16 @@ function buildFields(c){
       <input type="number" step="0.001" placeholder="e.g. ${ex}" onkeydown="enterNext(event,this)" oninput="setVal('dupr',this.value)">
     </div>
     <div class="field">
+      <label>Your DUPR ID</label>
+      <input type="text" id="duprIdInput" placeholder="e.g. 1234567890" onkeydown="enterNext(event,this)" oninput="setVal('duprId',this.value)">
+      <input type="email" id="duprEmailInput" placeholder="your@email.com" style="display:none;" onkeydown="enterNext(event,this)" oninput="setVal('duprEmail',this.value)">
+      <div class="dupr-hint">Find this in the DUPR app under your profile.</div>
+      <label class="dupr-toggle-label">
+        <input type="checkbox" id="noDuprIdToggle" onchange="toggleDuprIdMode('main',this.checked)">
+        I don't have a DUPR ID yet
+      </label>
+    </div>
+    <div class="field">
       <label>Gender</label>
       <div class="seg" id="segGender">
         <button type="button" data-c="cyan" onclick="pick(this,'gender','M')">Male</button>
@@ -784,6 +798,16 @@ function buildFields(c){
         oninput="setVal('partnerName',this.value); acShow('partnerName',this.value)"
         onfocus="acShow('partnerName',this.value)" onblur="acHideDelayed('partnerName')">
       <div class="ac-list" id="acList-partnerName"></div>
+    </div>
+    <div class="field">
+      <label>Partner's DUPR ID</label>
+      <input type="text" id="partnerDuprIdInput" placeholder="e.g. 1234567890" onkeydown="enterNext(event,this)" oninput="setVal('partnerDuprId',this.value)">
+      <input type="email" id="partnerDuprEmailInput" placeholder="partner@email.com" style="display:none;" onkeydown="enterNext(event,this)" oninput="setVal('partnerDuprEmail',this.value)">
+      <div class="dupr-hint">Find this in the DUPR app under their profile.</div>
+      <label class="dupr-toggle-label">
+        <input type="checkbox" id="noPartnerDuprIdToggle" onchange="toggleDuprIdMode('partner',this.checked)">
+        My partner doesn't have a DUPR ID yet
+      </label>
     </div>
     <div class="field">
       <label>Partner's Gender</label>
@@ -821,6 +845,24 @@ function setVal(k,v){ form[k]=v; validate(); }
 function pick(btn,k,v){
   btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel'); form[k]=v; validate();
+}
+// Toggles between "DUPR ID" input and "email" input (per DUPR's own
+// recommended process for players who don't have an account yet — the
+// club can invite them by email, which auto-creates their account and
+// lets us log matches for them immediately).
+function toggleDuprIdMode(who,checked){
+  const idInput=document.getElementById(who==='main'?'duprIdInput':'partnerDuprIdInput');
+  const emailInput=document.getElementById(who==='main'?'duprEmailInput':'partnerDuprEmailInput');
+  const idKey=who==='main'?'duprId':'partnerDuprId';
+  const emailKey=who==='main'?'duprEmail':'partnerDuprEmail';
+  if(checked){
+    idInput.style.display='none'; idInput.value=''; form[idKey]='';
+    emailInput.style.display='block';
+  }else{
+    idInput.style.display='block';
+    emailInput.style.display='none'; emailInput.value=''; form[emailKey]='';
+  }
+  validate();
 }
 function pickFile(input){
   const f=input.files[0]; if(!f) return;
@@ -905,7 +947,36 @@ function acSelect(field,index){
       .find(b=>b.getAttribute('onclick').includes(`'${p.gender}'`));
     if(btn) pick(btn,genderKey,p.gender);
   }
+
+  // Auto-fill DUPR ID (or switch to email mode) from what was remembered
+  // the last time this player registered — still fully editable.
+  const who=field==='name'?'main':'partner';
+  applyRememberedDuprIdentity(who,p.duprIdentity||'');
+
   list.classList.remove('show');
+}
+
+// Fills in the DUPR ID/email fields from a remembered identity string —
+// either a raw DUPR ID, or "email:xxx" if they registered without one
+// last time. Always editable afterward; this is just a starting suggestion.
+function applyRememberedDuprIdentity(who,identity){
+  const idInput=document.getElementById(who==='main'?'duprIdInput':'partnerDuprIdInput');
+  const emailInput=document.getElementById(who==='main'?'duprEmailInput':'partnerDuprEmailInput');
+  const toggle=document.getElementById(who==='main'?'noDuprIdToggle':'noPartnerDuprIdToggle');
+  const idKey=who==='main'?'duprId':'partnerDuprId';
+  const emailKey=who==='main'?'duprEmail':'partnerDuprEmail';
+  if(!identity) return; // nothing remembered — leave fields as the admin left them
+  if(identity.indexOf('email:')===0){
+    const email=identity.slice(6);
+    if(toggle) toggle.checked=true;
+    if(idInput){ idInput.style.display='none'; idInput.value=''; form[idKey]=''; }
+    if(emailInput){ emailInput.style.display='block'; emailInput.value=email; form[emailKey]=email; }
+  }else{
+    if(toggle) toggle.checked=false;
+    if(idInput){ idInput.style.display='block'; idInput.value=identity; form[idKey]=identity; }
+    if(emailInput){ emailInput.style.display='none'; emailInput.value=''; form[emailKey]=''; }
+  }
+  validate();
 }
 
 // Keyboard navigation: Up/Down to move through suggestions, Enter to select
@@ -944,6 +1015,10 @@ function validate(){
   errEl.classList.remove('show');
   let ok=form.name&&form.dupr&&form.gender&&form._file;
   if(c.type!=='singles') ok=ok&&form.partnerName&&form.partnerGender&&(form.payBoth!==undefined);
+
+  // DUPR ID (or fallback email) required for every player
+  ok = ok && !!(form.duprId||form.duprEmail);
+  if(c.type!=='singles') ok = ok && !!(form.partnerDuprId||form.partnerDuprEmail);
 
   // DUPR tier block (tierStrictMax = strictly below tierMax)
   const r=parseFloat(form.dupr);
@@ -1008,8 +1083,10 @@ async function submitEntry(){
 
   const payload={
     category:current, name:form.name, dupr:form.dupr, gender:form.gender,
+    duprId:form.duprId||'', duprEmail:form.duprEmail||'',
     partnerName:form.partnerName||'', partnerGender:form.partnerGender||'',
     partnerDupr:form.partnerDupr||'', payingForBoth:form.payBoth===true,
+    partnerDuprId:form.partnerDuprId||'', partnerDuprEmail:form.partnerDuprEmail||'',
     fileBase64:base64, fileName:file.name, mimeType:file.type,
   };
 
