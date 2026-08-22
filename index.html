@@ -85,6 +85,16 @@ h1 .hl{color:var(--pink);}
 .card.full{cursor:not-allowed;opacity:.85;} .card.full:hover{transform:none;}
 .full-msg{margin-top:16px;background:var(--surface-2);box-shadow:var(--clay-in);
   border-radius:var(--r-sm);padding:12px 14px;text-align:center;font-weight:700;color:var(--muted);font-size:.92rem;}
+.idle-block{margin-top:24px;background:var(--surface);box-shadow:var(--clay);
+  border-radius:var(--r);padding:36px 28px;text-align:center;}
+.idle-block h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.5rem;
+  color:var(--ink);margin-bottom:12px;}
+.idle-block p{color:var(--muted);font-weight:600;font-size:.95rem;line-height:1.6;
+  max-width:480px;margin:0 auto 20px;}
+.idle-dnl-note{background:var(--surface-2);box-shadow:var(--clay-in);border-radius:var(--r-sm);
+  padding:16px 20px;font-weight:600;font-size:.9rem;color:var(--ink);line-height:1.6;
+  max-width:480px;margin:0 auto;}
+.idle-dnl-note b{color:var(--pink);}
 .who-btn{width:100%;margin-top:12px;font-family:'Fredoka',sans-serif;font-weight:600;
   font-size:.85rem;letter-spacing:.03em;color:var(--muted);
   background:var(--surface-2);box-shadow:var(--clay-sm);border:none;
@@ -533,6 +543,20 @@ async function loadSlots(){
     const data = await res.json();
     WEEK = data.week;
     slots = data;
+
+    if(data.registrationOpen===false){
+      document.getElementById('welcome').innerHTML = `Welcome to the <span class="hl">HIVE</span>`;
+      document.getElementById('catGrid').innerHTML = `
+        <div class="idle-block">
+          <h2>Season 2 has wrapped up!</h2>
+          <p>Thanks for an incredible season of DUPR Nights at PickleBee by 71. Season 3 registration will open here soon — stay tuned.</p>
+          <div class="idle-dnl-note">
+            In the meantime, don't miss the <b>DUPR Night League (DNL)</b> — Sri Lanka's first-ever DUPR Night League, featuring our top players from this season battling it out for the title.
+          </div>
+        </div>`;
+      return;
+    }
+
     document.getElementById('welcome').innerHTML = (WEEK===21)
       ? `Welcome to <span class="hl">Week 21</span>, the Biggest DUPR Week at PickleBee by 71!`
       : `Welcome to the <span class="hl">Week ${WEEK}</span> of DUPR at PickleBee by 71`;
