@@ -830,8 +830,6 @@ function renderCards(){
       <div class="col-r">
         <div class="rule">${esc(ruleText(c))}</div>
         ${spotsLine(c,true)}
-        <div style="height:12px"></div>
-        ${bankBlockHtml()}
         <div class="cat-actions">
           <button class="reg-btn" onclick="openForm('${featKey}')">Register now</button>
           ${whoBtn(featKey,c)}
@@ -862,7 +860,6 @@ function renderCards(){
       ${locked ? '<div class="full-msg">See you next week!</div>'
         : full ? '<div class="full-msg">Sorry, no slots left! see you next week!</div>'
         : spotsLine(c,false)}
-      ${(locked||full) ? '' : bankBlockHtml()}
       <div class="cat-actions">
         ${(locked||full) ? '' : `<button class="reg-btn" onclick="event.stopPropagation();openForm('${key}')">Register</button>`}
         ${whoBtn(key,c)}
