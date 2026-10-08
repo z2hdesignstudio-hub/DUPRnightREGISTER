@@ -719,11 +719,13 @@ function exampleDupr(cat){
 async function loadSlots(){
   // PERF: 10-second timeout on initial load
   const ctrl = new AbortController();
-  const timer = setTimeout(()=>ctrl.abort(), 10000);
+  const timer = setTimeout(()=>ctrl.abort(), 20000);
   try{
     const res = await fetch(BACKEND_URL, {signal: ctrl.signal});
     clearTimeout(timer);
     const data = await res.json();
+    // The server answers with {ok:false,error} on failure - never render that as an empty page
+    if(!data || data.ok===false || !data.categories) throw new Error((data&&data.error)||'Unexpected response from the server');
     WEEK = data.week;
     slots = data;
 
@@ -752,8 +754,13 @@ async function loadSlots(){
     if(WEEK===21){ initFireworks(); initBottleSparkles(); } // National Pickleball Day — Week 21 only, auto-expires after
     renderCards();
   }catch(e){
+    clearTimeout(timer);
+    // One quiet automatic retry (covers a cold start or a new week's sheet being built), then show the reason
+    if(!loadSlots._retried){ loadSlots._retried=true; setTimeout(loadSlots,2500); return; }
+    const why = (e && e.name==='AbortError') ? 'the server took too long to answer' : ((e && e.message) || 'unknown error');
     document.getElementById('catGrid').innerHTML =
-      '<div class="tile wide msg-tile"><div class="full-msg">Couldn\'t load events. Please refresh in a moment.</div></div>';
+      '<div class="tile wide msg-tile"><div class="full-msg">Couldn\'t load events ('+esc(why)+').</div>'
+      + '<div class="cat-actions"><button class="reg-btn" onclick="loadSlots._retried=false;loadSlots()">Try again</button></div></div>';
   }
 }
 /* Hero chips: registration status, the week's date range, event count */
