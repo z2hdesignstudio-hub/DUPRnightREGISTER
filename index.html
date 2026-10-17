@@ -405,6 +405,124 @@ input[type=file]{display:none;}
   .sparkle{animation:none;opacity:.85;}
   .lb-card,.lb-card::after,.lb-cta-pill,.hurry,.tile{animation:none;}
 }
+
+/* ---------- LIVE SCORES ---------- */
+@keyframes liveRing{0%{box-shadow:0 0 0 0 rgba(255,46,154,.55);}70%{box-shadow:0 0 0 10px rgba(255,46,154,0);}100%{box-shadow:0 0 0 0 rgba(255,46,154,0);}}
+@keyframes liveGlow{0%,100%{box-shadow:var(--glass-shadow),var(--glass-inset),0 0 0 0 rgba(255,46,154,0);}50%{box-shadow:var(--glass-shadow),var(--glass-inset),0 0 28px 5px rgba(255,46,154,.26);}}
+@keyframes flashRow{0%{background:rgba(168,214,0,.65);}100%{background:transparent;}}
+.ld{display:inline-block;flex:none;width:10px;height:10px;border-radius:50%;background:#b8c5b9;}
+.is-live .ld,.ld.on{background:var(--pink);animation:liveRing 1.4s ease-out infinite;}
+.live-tile{grid-column:span 8;display:flex;flex-direction:column;gap:6px;text-align:left;cursor:pointer;width:100%;
+  font-family:inherit;color:var(--ink);border:1px solid var(--glass-edge);padding:22px 24px;}
+.live-tile.is-live{animation:rise .45s ease both,liveGlow 2.6s ease-in-out infinite;}
+.live-badge{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-family:'Fredoka',sans-serif;font-weight:700;
+  letter-spacing:.8px;font-size:.78rem;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid var(--glass-edge);}
+.is-live .live-badge{background:var(--pink);color:#fff;border-color:transparent;}
+.is-live .live-badge .ld{background:#fff;}
+.live-tile h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.4rem;margin-top:4px;}
+.live-tile p{color:var(--muted);font-weight:700;font-size:.9rem;line-height:1.45;}
+.live-cta{margin-top:6px;align-self:flex-start;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.95rem;color:#fff;
+  background:linear-gradient(135deg,var(--cyan),var(--lime-deep));padding:9px 18px;border-radius:999px;box-shadow:0 6px 14px rgba(18,204,204,.3);}
+.live-tile.is-quiet .live-cta{background:rgba(255,255,255,.7);color:var(--ink);box-shadow:none;border:1px solid var(--glass-edge);}
+#screenLive{grid-column:1/-1;}
+.wrap.on-live header.hero{grid-column:1/-1;padding:16px 22px;}
+.wrap.on-live header.hero .chips{display:none;}
+.wrap.on-live .logo{width:52px;height:52px;padding:8px;}
+.live-panel.panel.tile{max-width:980px;padding:24px 22px;}
+.live-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+.live-top .back{margin-bottom:0;}
+.live-status{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:.78rem;color:var(--muted);}
+.live-status.bad{color:var(--pink);}
+.live-title{display:flex;align-items:center;gap:10px;}
+.live-title .share{margin-left:auto;font-family:'Nunito',sans-serif;font-weight:800;font-size:.8rem;color:#0aa8a8;background:rgba(255,255,255,.7);
+  border:1px solid var(--glass-edge);border-radius:999px;padding:7px 14px;cursor:pointer;}
+.live-cats{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;margin:0 -2px;scroll-snap-type:x proximity;scrollbar-width:none;}
+.live-cats::-webkit-scrollbar{display:none;}
+.lcat{flex:none;scroll-snap-align:start;display:flex;flex-direction:column;gap:2px;text-align:left;cursor:pointer;font-family:'Nunito',sans-serif;
+  color:var(--ink);background:rgba(255,255,255,.6);border:1px solid var(--glass-edge);border-radius:16px;padding:9px 14px;min-width:132px;}
+.lcat b{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.92rem;display:flex;align-items:center;gap:7px;white-space:nowrap;}
+.lcat small{font-weight:800;font-size:.72rem;color:var(--muted);}
+.lcat.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+.lcat.on small{color:rgba(255,255,255,.72);}
+.lcat .ld{width:8px;height:8px;}
+.lcat .tick{color:var(--lime-deep);font-weight:800;}
+.seg{display:flex;gap:4px;padding:4px;border-radius:999px;background:rgba(255,255,255,.55);border:1px solid var(--glass-edge);margin:4px 0 12px;}
+.seg button{flex:1;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.95rem;color:var(--muted);background:none;border:none;
+  border-radius:999px;padding:9px 6px;cursor:pointer;}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 3px 10px rgba(60,80,55,.16);}
+.live-find{width:100%;font-family:'Nunito',sans-serif;font-weight:700;font-size:.95rem;color:var(--ink);padding:11px 16px;border-radius:999px;
+  border:1px solid var(--glass-edge);background:rgba(255,255,255,.7);outline:none;margin-bottom:12px;}
+.live-find:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(18,204,204,.2);}
+.lprog{display:flex;align-items:center;gap:10px;margin:2px 0 12px;font-weight:800;font-size:.8rem;color:var(--muted);}
+.lprog .bar{flex:1;height:7px;border-radius:99px;background:rgba(0,0,0,.08);overflow:hidden;}
+.lprog .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--lime-deep));transition:width .6s ease;}
+.lstate{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.72rem;letter-spacing:.5px;padding:3px 10px;border-radius:99px;background:rgba(0,0,0,.07);color:var(--muted);}
+.lstate.live{background:var(--pink);color:#fff;}
+.lstate.complete{background:var(--lime);color:var(--ink);}
+.lhead{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.82rem;letter-spacing:.6px;text-transform:uppercase;color:#0aa8a8;margin:16px 2px 8px;}
+.lhead:first-child{margin-top:4px;}
+.mlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.mrow{position:relative;border-radius:18px;padding:12px 14px;background:rgba(255,255,255,.62);border:1px solid var(--glass-edge);
+  display:flex;flex-direction:column;gap:8px;}
+.mrow.next{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(18,204,204,.16);}
+.mrow.hit{border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,46,154,.16);}
+.mrow.flash,.bm.flash{animation:flashRow 2.4s ease-out;}
+.m-meta{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;font-weight:800;font-size:.74rem;color:var(--muted);}
+.m-time{color:var(--ink);font-family:'Fredoka',sans-serif;font-weight:600;font-size:.86rem;}
+.m-court,.m-stage{padding:2px 9px;border-radius:99px;background:rgba(0,0,0,.06);}
+.m-court{background:rgba(18,204,204,.16);color:#078a8a;}
+.m-next{margin-left:auto;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.7rem;letter-spacing:.5px;color:#fff;background:var(--cyan);padding:2px 10px;border-radius:99px;}
+.mteam{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;font-size:.95rem;line-height:1.25;}
+.mteam .nm{min-width:0;overflow-wrap:anywhere;}
+.mteam .sc{flex:none;min-width:30px;text-align:center;font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.15rem;padding:2px 8px;border-radius:10px;background:rgba(0,0,0,.05);color:var(--muted);}
+.mteam.win .nm{font-weight:800;color:var(--ink);}
+.mteam.win .sc{background:var(--lime);color:var(--ink);}
+.mteam.lose .nm{color:var(--muted);font-weight:600;}
+.mteam.tbd .nm{color:var(--muted);font-style:italic;font-weight:600;}
+.glist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.gcard{border-radius:20px;padding:14px 14px 10px;background:rgba(255,255,255,.62);border:1px solid var(--glass-edge);min-width:0;}
+.gcard h3{font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.05rem;display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.gtable{width:100%;border-collapse:collapse;font-size:.88rem;}
+.gtable th{font-family:'Fredoka',sans-serif;font-weight:500;font-size:.72rem;letter-spacing:.4px;color:var(--muted);text-align:center;padding:4px 3px;}
+.gtable th:nth-child(2){text-align:left;}
+.gtable td{padding:8px 3px;text-align:center;font-weight:700;border-top:1px solid rgba(0,0,0,.06);}
+.gtable td.rk{width:26px;font-family:'Fredoka',sans-serif;font-weight:700;color:var(--muted);}
+.gtable td.tn{text-align:left;font-weight:800;overflow-wrap:anywhere;}
+.gtable td.pts{font-family:'Fredoka',sans-serif;font-weight:700;}
+.gtable tr.adv td.rk{color:var(--ink);}
+.gtable tr.adv{background:linear-gradient(90deg,rgba(168,214,0,.28),transparent 70%);}
+.gtable tr.out td.tn{color:var(--muted);font-weight:600;}
+.gtable tr.hit{background:rgba(255,46,154,.12);}
+.gtag{display:inline-block;margin-left:6px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.62rem;letter-spacing:.4px;padding:1px 7px;border-radius:99px;background:var(--lime);color:var(--ink);vertical-align:middle;}
+.gnote{font-size:.76rem;font-weight:700;color:var(--muted);margin:10px 2px 0;}
+.bracket{display:flex;gap:18px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x proximity;align-items:stretch;}
+.bcol{flex:1 0 220px;display:flex;flex-direction:column;gap:10px;scroll-snap-align:start;}
+.bcol h4{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.82rem;letter-spacing:.6px;text-transform:uppercase;color:#0aa8a8;text-align:center;}
+.bcards{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:12px;}
+.bm{position:relative;border-radius:16px;padding:10px 12px;background:rgba(255,255,255,.7);border:1px solid var(--glass-edge);display:flex;flex-direction:column;gap:6px;}
+.bm.hit{border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,46,154,.16);}
+.bm.fin{border-color:var(--lime-deep);box-shadow:0 0 0 3px rgba(168,214,0,.22);}
+.bm .m-meta{font-size:.68rem;}
+.bm .mteam{font-size:.88rem;}
+.bm .mteam .sc{font-size:1rem;min-width:26px;}
+.lempty{text-align:center;color:var(--muted);font-weight:700;padding:34px 12px;line-height:1.6;}
+.lempty b{display:block;font-family:'Fredoka',sans-serif;font-size:1.1rem;color:var(--ink);margin-bottom:4px;}
+.lretry{margin-top:12px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.95rem;color:#fff;background:var(--cyan);border:none;border-radius:999px;padding:10px 22px;cursor:pointer;}
+@media (max-width:980px){
+  .live-tile{grid-column:1/-1;}
+  .live-tile.is-live{order:-1;}
+  header.hero{order:-2;}
+}
+@media (max-width:700px){
+  .mlist,.glist{grid-template-columns:1fr;}
+  .bcol{flex-basis:78vw;}
+  .live-panel.panel.tile{padding:20px 14px;}
+}
+@media (prefers-reduced-motion:reduce){
+  .is-live .ld,.ld.on,.live-tile.is-live,.mrow.flash,.bm.flash{animation:none;}
+}
+
+.live-tile[hidden]{display:none;}
 </style>
 </head>
 <body>
@@ -429,6 +547,7 @@ input[type=file]{display:none;}
   <!-- SCREEN A: categories + leaderboard -->
   <section id="screenSelect" class="screen active">
     <div id="leaderboardSection"><div class="lb-card tile"><h2>HIVE Rankings</h2><div class="lbmeta">Loading standings…</div></div></div>
+    <button type="button" class="tile live-tile is-quiet" id="liveTile" hidden onclick="openLive()"></button>
     <div class="grid" id="catGrid"></div>
   </section>
 
@@ -441,6 +560,22 @@ input[type=file]{display:none;}
       <div id="formFields"></div>
       <p class="err" id="tierErr"></p>
       <button class="submit" id="submitBtn" disabled onclick="submitEntry()">Reserve my spot</button>
+    </div>
+  </section>
+
+  <!-- SCREEN C: live scores -->
+  <section id="screenLive" class="screen">
+    <div class="panel tile live-panel">
+      <div class="live-top">
+        <button class="back" onclick="closeLive()">‹ Back to events</button>
+        <span class="live-status" id="liveStatus">Loading…</span>
+      </div>
+      <h2 class="live-title"><i id="liveTitleDot" class="ld"></i> Live scores <button type="button" class="share" id="liveShareBtn" onclick="liveShare()">Share</button></h2>
+      <p class="sched" id="liveSub"></p>
+      <div class="live-cats" id="liveCats"></div>
+      <div class="seg" id="liveSeg"></div>
+      <input type="search" class="live-find" id="liveFind" placeholder="Find your name to highlight your matches" oninput="liveFind(this.value)" autocomplete="off">
+      <div id="liveBody"></div>
     </div>
   </section>
 </div>
@@ -1465,12 +1600,263 @@ function switchScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelector('.wrap').classList.toggle('on-form', id==='screenForm');
+  document.querySelector('.wrap').classList.toggle('on-live', id==='screenLive');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function goSelect(){ switchScreen('screenSelect'); }
 
+
+/* ============================================================
+   LIVE SCORES  (read-only public view: matches, group tables, bracket)
+   Data: BACKEND_URL?action=live  (current week only, no referee code in it)
+   Polls every 15 s while the Live screen is open, every 60 s on the
+   front page (to light up the Live tile), and pauses when the tab is
+   hidden. A failed poll never wipes what is already on screen.
+   ============================================================ */
+const LIVE_POLL_OPEN_MS=15000, LIVE_POLL_IDLE_MS=60000;
+const LIVE = {data:null, sig:{}, flash:new Set(), cat:null, view:'matches', q:'', open:false,
+  busy:false, lastOk:0, err:null, timer:null, tick:null, lastJson:''};
+try{ LIVE.q = localStorage.getItem('pb_live_q') || ''; }catch(e){}
+
+function liveCats(){ return (LIVE.data&&LIVE.data.categories)||[]; }
+function liveName(c){ return String(c.label||'').replace(/\s+-\s+/,' · '); }
+function liveTimeMin(t){
+  const m=/^(\d{1,2}):(\d{2})\s*([AP])M$/i.exec(String(t||'').trim()); if(!m) return 0;
+  let h=Number(m[1])%12; if(/p/i.test(m[3])) h+=12; return h*60+Number(m[2]);
+}
+function liveStageLabel(m){
+  if(m.stage==='group') return m.group||'Group';
+  return ({qf:'Quarter-final',sf:'Semi-final',final:'Final',final1:'Final 1',final2:'Final 2',consolation:'Consolation'})[m.stage]||m.stage;
+}
+function liveHit(...names){
+  const q=LIVE.q.trim().toLowerCase(); if(!q) return false;
+  return names.some(n=>String(n||'').toLowerCase().indexOf(q)>=0);
+}
+function liveDefaultCat(){
+  const cs=liveCats(); if(!cs.length) return null;
+  const pick=cs.find(c=>c.status==='live')||cs.find(c=>c.status==='upcoming')||cs.find(c=>c.status==='complete')||cs[0];
+  return pick.key;
+}
+
+async function loadLive(){
+  if(LIVE.busy) return; LIVE.busy=true;
+  const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),15000);
+  try{
+    const res=await fetch(BACKEND_URL+'?action=live',{signal:ctrl.signal});
+    const data=await res.json();
+    if(!data||data.ok!==true) throw new Error((data&&data.error)||'No data');
+    const first=!LIVE.data;
+    // flag matches whose score or teams changed since the last poll
+    const next={};
+    (data.categories||[]).forEach(c=>(c.matches||[]).forEach(m=>{
+      const id=c.key+'|'+m.id, s=[m.scoreA,m.scoreB,m.done,m.aName,m.bName].join('~');
+      next[id]=s; if(!first && LIVE.sig[id]!==undefined && LIVE.sig[id]!==s) LIVE.flash.add(id);
+    }));
+    LIVE.sig=next;
+    const json=JSON.stringify(data.categories);
+    const changed=(json!==LIVE.lastJson);
+    LIVE.lastJson=json; LIVE.data=data; LIVE.lastOk=Date.now(); LIVE.err=null;
+    if(!LIVE.cat || !liveCats().some(c=>c.key===LIVE.cat)) LIVE.cat=liveDefaultCat();
+    renderLiveTile();
+    if(LIVE.open && (changed||first)) renderLive();
+  }catch(e){
+    LIVE.err=(e&&e.name==='AbortError')?'Slow connection':((e&&(e.name==='SyntaxError'||e.name==='TypeError'))?'Connection problem':String((e&&e.message)||'Offline'));
+    if(!LIVE.data) renderLiveTile();
+    if(LIVE.open) renderLive();
+  }finally{ clearTimeout(to); LIVE.busy=false; updateLiveStatus(); }
+}
+
+function liveSchedule(){
+  clearInterval(LIVE.timer);
+  const ms=LIVE.open?LIVE_POLL_OPEN_MS:LIVE_POLL_IDLE_MS;
+  LIVE.timer=setInterval(()=>{ if(!document.hidden) loadLive(); },ms);
+}
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden && (LIVE.open || Date.now()-LIVE.lastOk>LIVE_POLL_IDLE_MS)) loadLive(); });
+
+/* ---- front page tile ---- */
+function renderLiveTile(){
+  const el=document.getElementById('liveTile'); if(!el) return;
+  el.hidden=false;
+  const cs=liveCats(); const drawn=cs.filter(c=>c.status!=='nodraw');
+  const liveN=cs.filter(c=>c.status==='live').length;
+  const total=drawn.reduce((a,c)=>a+((c.progress&&c.progress.total)||0),0);
+  const done=drawn.reduce((a,c)=>a+((c.progress&&c.progress.done)||0),0);
+  let badge='SOON', title='Live scores and brackets', text='Follow every match, group table and knockout bracket here once the draws are out.', cta='Open live board', cls='is-quiet';
+  if(drawn.length && liveN){
+    badge='LIVE NOW'; cls='is-live'; cta='Watch live';
+    title='Matches are on';
+    text=liveN+' event'+(liveN===1?'':'s')+' in play · '+done+' of '+total+' matches played';
+  }else if(drawn.length && drawn.every(c=>c.status==='complete')){
+    badge='RESULTS'; cls='is-quiet'; cta='See results';
+    title='Results are in'; text='Final scores, group tables and brackets for '+drawn.length+' event'+(drawn.length===1?'':'s')+'.';
+  }else if(drawn.length){
+    badge='DRAW OUT'; cls='is-quiet'; cta='See my court and time';
+    title='Draws are out'; text=drawn.length+' event'+(drawn.length===1?'':'s')+' drawn · find your group, court and match time.';
+  }
+  el.className='tile live-tile '+cls;
+  el.innerHTML='<span class="live-badge"><i class="ld"></i>'+badge+'</span><h2>'+esc(title)+'</h2><p>'+esc(text)+'</p><span class="live-cta">'+esc(cta)+' ›</span>';
+}
+
+/* ---- open / close ---- */
+function openLive(catKey){
+  LIVE.open=true;
+  if(catKey && liveCats().some(c=>c.key===catKey)) LIVE.cat=catKey;
+  else if(catKey) LIVE._wantCat=catKey;
+  if(!LIVE.cat) LIVE.cat=liveDefaultCat();
+  switchScreen('screenLive');
+  const f=document.getElementById('liveFind'); if(f) f.value=LIVE.q;
+  renderLive(); liveSchedule(); loadLive();
+  clearInterval(LIVE.tick); LIVE.tick=setInterval(updateLiveStatus,1000);
+  try{ history.replaceState(null,'','#live'+(LIVE.cat?'/'+LIVE.cat:'')); }catch(e){}
+}
+function closeLive(){
+  LIVE.open=false; clearInterval(LIVE.tick); liveSchedule();
+  try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+  goSelect();
+}
+function updateLiveStatus(){
+  const el=document.getElementById('liveStatus'); if(!el) return;
+  if(!LIVE.lastOk){ el.className='live-status'+(LIVE.err?' bad':''); el.textContent=LIVE.err?('Could not load · '+LIVE.err):'Loading…'; return; }
+  const s=Math.max(0,Math.round((Date.now()-LIVE.lastOk)/1000));
+  const ago=s<5?'just now':(s<60?s+'s ago':Math.floor(s/60)+' min ago');
+  el.className='live-status'+(LIVE.err?' bad':'');
+  el.textContent=LIVE.err?('Reconnecting · last update '+ago):('Updated '+ago+' · auto refresh');
+}
+function liveSetCat(k){ LIVE.cat=k; renderLive(); try{ history.replaceState(null,'','#live/'+k); }catch(e){} }
+function liveSetView(v){ LIVE.view=v; renderLive(); }
+function liveFind(v){ LIVE.q=v||''; try{ localStorage.setItem('pb_live_q',LIVE.q); }catch(e){} renderLive(); }
+async function liveShare(){
+  const cat=liveCats().find(c=>c.key===LIVE.cat);
+  const url=location.origin+location.pathname+'#live'+(LIVE.cat?'/'+LIVE.cat:'');
+  const text='Live scores'+(cat?' · '+liveName(cat):'')+' at PickleBee by 71';
+  try{ if(navigator.share){ await navigator.share({title:text,text:text,url:url}); return; } }catch(e){ if(e&&e.name==='AbortError') return; }
+  try{ await navigator.clipboard.writeText(url); }catch(e){ legacyCopy(url); }
+  const b=document.getElementById('liveShareBtn'); if(b){ b.textContent='Link copied'; setTimeout(()=>{ b.textContent='Share'; },1800); }
+}
+
+/* ---- rendering ---- */
+function renderLive(){
+  const body=document.getElementById('liveBody'); if(!body) return;
+  const catsEl=document.getElementById('liveCats'), segEl=document.getElementById('liveSeg');
+  const sub=document.getElementById('liveSub'), title=document.getElementById('liveTitleDot');
+  const cs=liveCats();
+  const anyLive=cs.some(c=>c.status==='live');
+  if(title) title.className='ld'+(anyLive?' on':'');
+  updateLiveStatus();
+  if(!LIVE.data){
+    catsEl.innerHTML=''; segEl.style.display='none'; document.getElementById('liveFind').style.display='none';
+    sub.textContent='';
+    body.innerHTML = LIVE.err
+      ? '<div class="lempty"><b>Could not load the live board</b>'+esc(LIVE.err)+'<br><button class="lretry" onclick="loadLive()">Try again</button></div>'
+      : '<div class="lempty"><b>Loading live scores</b>One moment…</div>';
+    return;
+  }
+  if(LIVE._wantCat && cs.some(c=>c.key===LIVE._wantCat)){ LIVE.cat=LIVE._wantCat; LIVE._wantCat=null; }
+  sub.textContent=weekLabelFor(LIVE.data.week)+' · updates by itself, no need to refresh';
+  if(!cs.length){
+    catsEl.innerHTML=''; segEl.style.display='none'; document.getElementById('liveFind').style.display='none';
+    body.innerHTML='<div class="lempty"><b>No events this week</b>Check back when the next week opens.</div>'; return;
+  }
+  // category chips
+  catsEl.innerHTML=cs.map(c=>{
+    const st=c.status==='live'?'<i class="ld on"></i>':(c.status==='complete'?'<span class="tick">✓</span>':'');
+    const meta=c.status==='nodraw'?'Draw pending':(c.progress.done+' / '+c.progress.total+' played');
+    return '<button class="lcat'+(c.key===LIVE.cat?' on':'')+'" onclick="liveSetCat(\''+c.key+'\')"><b>'+st+esc(liveName(c))+'</b><small>'+esc(dayAbbrev(c.dayName))+' · '+esc(c.startTime||'')+' · '+esc(meta)+'</small></button>';
+  }).join('');
+  const selChip=catsEl.querySelector('.lcat.on'); if(selChip){ catsEl.scrollLeft=Math.max(0,selChip.offsetLeft-catsEl.offsetLeft-12); }
+  const sel=cs.find(c=>c.key===LIVE.cat)||cs[0];
+  const drawn=sel.status!=='nodraw';
+  segEl.style.display=drawn?'flex':'none';
+  document.getElementById('liveFind').style.display=drawn?'block':'none';
+  segEl.innerHTML=[['matches','Matches'],['tables','Tables'],['bracket','Bracket']].map(v=>
+    '<button class="'+(LIVE.view===v[0]?'on':'')+'" onclick="liveSetView(\''+v[0]+'\')">'+v[1]+'</button>').join('');
+  const keepX=(body.querySelector('.bracket')||{}).scrollLeft||0;
+  if(!drawn){
+    body.innerHTML='<div class="lempty"><b>The draw is not out yet</b>'+esc(liveName(sel))+' plays '+esc(dayAbbrev(sel.dayName))+' '+esc(String(sel.date||'').replace(/\s+\d{4}$/,''))+' at '+esc(sel.startTime||'')+'.<br>Groups, courts and match times appear here as soon as the draw is published.</div>';
+    return;
+  }
+  const pct=sel.progress.total?Math.round(sel.progress.done/sel.progress.total*100):0;
+  const stateTxt=sel.status==='live'?'LIVE':(sel.status==='complete'?'COMPLETE':'DRAW OUT');
+  const head='<div class="lprog"><span class="lstate '+sel.status+'">'+stateTxt+'</span><span class="bar"><i style="width:'+pct+'%"></i></span><span>'+sel.progress.done+' of '+sel.progress.total+' matches</span></div>';
+  body.innerHTML=head+(LIVE.view==='tables'?liveTablesHtml(sel):LIVE.view==='bracket'?liveBracketHtml(sel):liveMatchesHtml(sel));
+  const br=body.querySelector('.bracket'); if(br) br.scrollLeft=keepX;
+  if(LIVE.flash.size){ setTimeout(()=>LIVE.flash.clear(),2600); }
+}
+
+function liveTeamRow(name,ready,score,done,win,lose){
+  return '<div class="mteam'+(ready?'':' tbd')+(win?' win':'')+(lose?' lose':'')+'"><span class="nm">'+esc(String(name||'To be decided').replace(/\s*\u2014\s*/g,' · '))+'</span><b class="sc">'+(done?score:'-')+'</b></div>';
+}
+function liveMatchCard(c,m,isNext,cls){
+  const aWin=m.done&&m.scoreA>m.scoreB, bWin=m.done&&m.scoreB>m.scoreA;
+  const id=c.key+'|'+m.id;
+  const hit=liveHit(m.aName,m.bName);
+  return '<div class="'+cls+(isNext?' next':'')+(hit?' hit':'')+(LIVE.flash.has(id)?' flash':'')+'">'
+    +'<div class="m-meta"><span class="m-time">'+esc(m.time||'')+'</span><span class="m-court">'+esc(m.court||'')+'</span>'+(cls==='mrow'?'<span class="m-stage">'+esc(liveStageLabel(m))+'</span>':'')
+    +(isNext?'<span class="m-next">NEXT UP</span>':'')+'</div>'
+    +liveTeamRow(m.aName,m.aReady,m.scoreA,m.done,aWin,bWin)
+    +liveTeamRow(m.bName,m.bReady,m.scoreB,m.done,bWin,aWin)
+    +'</div>';
+}
+function liveNextSet(c){
+  // first unplayed match on each court (both teams known) is "next up"
+  const set=new Set(), seen={};
+  c.matches.slice().sort((a,b)=>liveTimeMin(a.time)-liveTimeMin(b.time)).forEach(m=>{
+    if(m.done||seen[m.court]) return;
+    seen[m.court]=1; if(m.aReady&&m.bReady) set.add(m.id);
+  });
+  return set;
+}
+function liveMatchesHtml(c){
+  const nxt=liveNextSet(c);
+  const byTime=(a,b)=>liveTimeMin(a.time)-liveTimeMin(b.time)||(/B$/.test(a.court)?1:0)-(/B$/.test(b.court)?1:0);
+  const grp=c.matches.filter(m=>m.stage==='group').sort(byTime);
+  const ko=c.matches.filter(m=>m.stage!=='group').sort(byTime);
+  let h='';
+  if(grp.length) h+='<div class="lhead">Group stage</div><div class="mlist">'+grp.map(m=>liveMatchCard(c,m,nxt.has(m.id),'mrow')).join('')+'</div>';
+  if(ko.length) h+='<div class="lhead">Knockouts</div><div class="mlist">'+ko.map(m=>liveMatchCard(c,m,nxt.has(m.id),'mrow')).join('')+'</div>';
+  return h||'<div class="lempty"><b>No matches yet</b></div>';
+}
+function liveTablesHtml(c){
+  if(!c.groups||!c.groups.length) return '<div class="lempty"><b>No groups</b></div>';
+  const tag=a=>a==='advances'?'<span class="gtag">THROUGH</span>':(a==='q7'||a==='q8')?'<span class="gtag">BEST 3RD</span>':'';
+  const cards=c.groups.map(g=>{
+    const rows=g.rows.map(r=>{
+      const adv=r.advancement==='advances'||r.advancement==='q7'||r.advancement==='q8';
+      return '<tr class="'+(adv?'adv':'')+(r.advancement==='eliminated'?' out':'')+(liveHit(r.name)?' hit':'')+'"><td class="rk">'+r.rank+(r.tie?'=':'')+'</td>'
+        +'<td class="tn">'+esc(r.name)+tag(r.advancement)+'</td><td>'+r.played+'</td><td>'+r.wins+'</td><td>'+r.losses+'</td>'
+        +'<td class="pts">'+(r.net>0?'+':'')+r.net+'</td></tr>';
+    }).join('');
+    return '<div class="gcard"><h3>'+esc(g.label)+' <span class="lstate '+(g.complete?'complete':'')+'">'+(g.complete?'DONE':'IN PLAY')+'</span></h3>'
+      +'<table class="gtable"><thead><tr><th></th><th>Team</th><th>P</th><th>W</th><th>L</th><th>+/-</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  }).join('');
+  return '<div class="glist">'+cards+'</div><p class="gnote">Ranked by wins, then point difference, then head to head. P played, W won, L lost, +/- net points.</p>';
+}
+function liveBracketHtml(c){
+  const ko=c.matches.filter(m=>m.stage!=='group');
+  if(!ko.length) return '<div class="lempty"><b>No knockout stage</b>This event is decided by the group table.</div>';
+  const order=[['qf','Quarter-finals'],['sf','Semi-finals'],['final','Final'],['final1','Final 1'],['final2','Final 2'],['consolation','Consolation']];
+  const cols=order.map(o=>({title:o[1],items:ko.filter(m=>m.stage===o[0])})).filter(x=>x.items.length);
+  // consolation sits under the final when both exist
+  const html=cols.map(col=>
+    '<div class="bcol"><h4>'+esc(col.title)+'</h4><div class="bcards">'+col.items.map(m=>{
+      const fin=/^final/.test(m.stage);
+      return liveMatchCard(c,m,false,'bm'+(fin?' fin':''));
+    }).join('')+'</div></div>').join('');
+  return '<div class="bracket">'+html+'</div>';
+}
+
+/* deep link: pb71.org/#live or #live/<category> */
+function liveFromHash(){
+  const m=/^#live(?:\/([a-z0-9_]+))?$/i.exec(location.hash||'');
+  if(m) openLive(m[1]||null);
+}
+window.addEventListener('hashchange',()=>{ if(/^#live/i.test(location.hash) && !LIVE.open) liveFromHash(); });
+
 /* ---- init ---- */
 loadSlots();
+loadLive();
+liveSchedule();
+liveFromHash();
 loadLeaderboard();
 loadPlayerDirectory();
 </script>
