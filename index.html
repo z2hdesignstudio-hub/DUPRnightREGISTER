@@ -523,6 +523,54 @@ input[type=file]{display:none;}
 }
 
 .live-tile[hidden]{display:none;}
+
+/* ---------- WEEK ON HOLD: "The HIVE isn't buzzing" ---------- */
+.hold-tile{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center;gap:8px 28px;
+  padding:34px 36px;background:linear-gradient(135deg,rgba(255,255,255,.55),rgba(255,236,190,.42) 55%,rgba(255,255,255,.5));}
+.hold-copy h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(2rem,6vw,3.4rem);line-height:1.02;margin-bottom:12px;}
+.hold-copy h2 .hl{color:var(--pink);display:inline-block;animation:holdWobble 3.6s ease-in-out infinite;}
+.hold-copy p{font-weight:800;font-size:clamp(1rem,2.4vw,1.25rem);line-height:1.5;color:var(--ink);max-width:30ch;}
+.hold-copy p b{font-family:'Fredoka',sans-serif;color:var(--orange);letter-spacing:.5px;display:inline-block;animation:holdBuzz 2.4s ease-in-out infinite;}
+.hold-scene{position:relative;width:100%;aspect-ratio:1.55/1;max-height:290px;}
+.hold-scene svg{width:100%;height:100%;overflow:visible;display:block;}
+.hex{fill:#ffd44d;stroke:#e59a00;stroke-width:2.5;stroke-linejoin:round;animation:holdHoney 4.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
+.hex.e{fill:#fff3c9;animation-name:holdHoneyEmpty;}
+.hex.c{fill:#ffb81c;}
+.zz{font-family:'Fredoka',sans-serif;font-weight:700;fill:#6a00f4;opacity:0;animation:holdZ 4.8s ease-in-out infinite;}
+.bee-fly{transform-box:view-box;animation:holdFly 15s ease-in-out infinite;}
+.bee-bob{animation:holdBob .9s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
+.wing{transform-box:fill-box;transform-origin:50% 100%;animation:holdWing .12s ease-in-out infinite alternate;}
+.wing.w2{animation-delay:.06s;}
+.bee-sleep{animation:holdSleep 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
+.trail{fill:none;stroke:#e59a00;stroke-width:2.2;stroke-dasharray:3 9;stroke-linecap:round;opacity:.45;}
+.hold-star{position:absolute;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 8px 2px rgba(255,255,255,.9);animation:holdTwinkle 3s ease-in-out infinite;}
+@keyframes holdHoney{0%,100%{transform:scale(1);filter:brightness(1);}50%{transform:scale(1.045);filter:brightness(1.09);}}
+@keyframes holdHoneyEmpty{0%,100%{transform:scale(1);}50%{transform:scale(1.025);}}
+@keyframes holdZ{0%{opacity:0;transform:translate(0,0) scale(.6);}25%{opacity:.95;}100%{opacity:0;transform:translate(26px,-58px) scale(1.25);}}
+@keyframes holdFly{
+  0%{transform:translate(-150px,-10px) scaleX(1);}
+  22%{transform:translate(20px,-62px) scaleX(1);}
+  45%{transform:translate(150px,-6px) scaleX(1);}
+  50%{transform:translate(150px,-6px) scaleX(-1);}
+  72%{transform:translate(10px,48px) scaleX(-1);}
+  95%{transform:translate(-150px,-10px) scaleX(-1);}
+  100%{transform:translate(-150px,-10px) scaleX(1);}}
+@keyframes holdBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+@keyframes holdWing{from{transform:rotate(-24deg);}to{transform:rotate(14deg);}}
+@keyframes holdSleep{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(2px) rotate(3deg);}}
+@keyframes holdWobble{0%,100%{transform:rotate(-2deg);}50%{transform:rotate(2.5deg) translateY(-2px);}}
+@keyframes holdBuzz{0%,86%,100%{transform:translateX(0);}88%{transform:translateX(-2px) rotate(-2deg);}91%{transform:translateX(2px) rotate(2deg);}94%{transform:translateX(-2px);}97%{transform:translateX(1px);}}
+@keyframes holdTwinkle{0%,100%{opacity:.25;transform:scale(.7);}50%{opacity:1;transform:scale(1.2);}}
+.chip.hold-chip .dot{background:var(--orange);box-shadow:0 0 0 4px rgba(255,143,0,.25);}
+@media (max-width:980px){ .hold-tile{order:-1;} }
+@media (max-width:760px){
+  .hold-tile{grid-template-columns:1fr;padding:26px 22px;text-align:left;}
+  .hold-scene{order:-1;max-width:330px;margin:0 auto;}
+}
+@media (prefers-reduced-motion:reduce){
+  .hold-copy h2 .hl,.hold-copy p b,.hex,.zz,.bee-fly,.bee-bob,.wing,.bee-sleep,.hold-star{animation:none;}
+  .zz{opacity:.8;}
+}
 </style>
 </head>
 <body>
@@ -887,6 +935,11 @@ async function loadSlots(){
       ? `Welcome to <span class="hl">Week 21</span>, the Biggest DUPR Week at PickleBee by 71!`
       : `Welcome to the <span class="hl">${weekLabel}</span> of DUPR at PickleBee by 71`;
     if(WEEK===21){ initFireworks(); initBottleSparkles(); } // National Pickleball Day — Week 21 only, auto-expires after
+    if(data.weekPaused){
+      if(_cdTimer){ clearInterval(_cdTimer); _cdTimer=null; }
+      document.getElementById('catGrid').innerHTML = holdTileHtml();
+      return;
+    }
     renderCards();
   }catch(e){
     clearTimeout(timer);
@@ -899,10 +952,51 @@ async function loadSlots(){
   }
 }
 /* Hero chips: registration status, the week's date range, event count */
+
+/* ---- whole week on hold: animated "The HIVE isn't buzzing" tile ---- */
+function holdBeeSvg(sleeping,id){
+  const eye = sleeping
+    ? '<path d="M15.5 -4.5 q2.5 2.2 5 0" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>'
+    : '<circle cx="19" cy="-4" r="2.3" fill="#fff"/><circle cx="19.6" cy="-4" r="1" fill="#1c2a1f"/>';
+  return '<defs><clipPath id="bc'+id+'"><ellipse cx="0" cy="0" rx="17" ry="12"/></clipPath></defs>'
+    +'<g class="'+(sleeping?'':'bee-bob')+'">'
+    +'<g class="wing"><ellipse cx="-2" cy="-15" rx="8.5" ry="13" fill="rgba(255,255,255,.8)" stroke="#6fd3f2" stroke-width="1.5"/></g>'
+    +'<g class="wing w2"><ellipse cx="7" cy="-14" rx="7.5" ry="11.5" fill="rgba(255,255,255,.7)" stroke="#6fd3f2" stroke-width="1.5"/></g>'
+    +'<path d="M-17 0 l-8 -3 l0 6z" fill="#1c2a1f"/>'
+    +'<ellipse cx="0" cy="0" rx="17" ry="12" fill="#ffc21a" stroke="#1c2a1f" stroke-width="2"/>'
+    +'<g clip-path="url(#bc'+id+')"><rect x="-8" y="-13" width="5.5" height="26" fill="#1c2a1f"/><rect x="2" y="-13" width="5.5" height="26" fill="#1c2a1f"/></g>'
+    +'<circle cx="16" cy="-2" r="8.5" fill="#1c2a1f"/>'
+    +eye
+    +'<path d="M14 -9 q-1 -7 -6 -9 M19 -9 q2 -7 7 -8" fill="none" stroke="#1c2a1f" stroke-width="1.6" stroke-linecap="round"/>'
+    +'</g>';
+}
+function holdSceneSvg(){
+  const R=34, dx=Math.sqrt(3)*R, dy=1.5*R, cx=200, cy=150;
+  const hex=(x,y)=>{ let p=[]; for(let k=0;k<6;k++){ const a=(Math.PI/180)*(60*k+30); p.push((x+R*Math.cos(a)).toFixed(1)+','+(y+R*Math.sin(a)).toFixed(1)); } return p.join(' '); };
+  const cells=[[0,0,'c',0],[dx,0,'',.6],[-dx,0,'e',1.2],[dx/2,-dy,'e',1.8],[-dx/2,-dy,'',2.4],[dx/2,dy,'',3],[-dx/2,dy,'e',3.6]];
+  const hexes=cells.map(c=>'<polygon class="hex '+c[2]+'" style="animation-delay:'+c[3]+'s" points="'+hex(cx+c[0],cy+c[1])+'"/>').join('');
+  const zs=[['z',0,16],['Z',1.6,22],['z',3.2,16]].map(z=>'<text class="zz" style="animation-delay:'+z[1]+'s" x="'+(cx+4)+'" y="'+(cy-4)+'" font-size="'+z[2]+'">'+z[0]+'</text>').join('');
+  return '<svg viewBox="0 0 400 258" role="img" aria-label="A sleepy beehive with a bee drifting around it">'
+    +hexes+zs
+    +'<g transform="translate('+(cx+dx/2)+' '+(cy-dy-24)+') scale(.8)"><g class="bee-sleep">'+holdBeeSvg(true,'s')+'</g></g>'
+    +'<g transform="translate(200 78)"><g class="bee-fly">'+holdBeeSvg(false,'f')+'</g></g>'
+    +'</svg>';
+}
+function holdTileHtml(){
+  const stars=[[8,12,0],[88,6,.8],[18,70,1.5],[92,60,2.1],[50,3,2.7]].map(s=>'<i class="hold-star" style="left:'+s[0]+'%;top:'+s[1]+'%;animation-delay:'+s[2]+'s"></i>').join('');
+  return '<div class="tile wide hold-tile" role="status" aria-live="polite">'+stars
+    +'<div class="hold-copy"><h2>Greetings <span class="hl">BEES!</span></h2>'
+    +'<p>Unfortunately, The HIVE isn\'t buzzing this week, fly safe till we <b>BUZZ</b> again</p></div>'
+    +'<div class="hold-scene">'+holdSceneSvg()+'</div></div>';
+}
+
 function renderHeroChips(data){
   const el=document.getElementById('heroChips'); if(!el) return;
   const open = data.registrationOpen!==false;
   let html = `<span class="chip"><span class="dot${open?'':' off'}"></span>${open?'Registration open':'Registration closed'}</span>`;
+  if(open && data.weekPaused){
+    el.innerHTML = '<span class="chip hold-chip"><span class="dot"></span>The HIVE is resting this week</span>'; return;
+  }
   if(open && data.weekStartDate){
     const start=new Date(data.weekStartDate);
     if(!isNaN(start.getTime())){
@@ -912,6 +1006,7 @@ function renderHeroChips(data){
     }
     const n=Object.keys(data.categories||{}).length;
     if(n) html += `<span class="chip">${n} event${n===1?'':'s'} this week</span>`;
+    if(n && data.pausedCount>0) html += `<span class="chip hold-chip"><span class="dot"></span>${data.pausedCount} on hold</span>`;
   }
   el.innerHTML=html;
 }
