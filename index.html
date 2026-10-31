@@ -73,6 +73,7 @@ body{
 .tile[data-accent=pink]{--ac:var(--pink);}
 .tile[data-accent=cyan]{--ac:var(--cyan);}
 .tile[data-accent=orange]{--ac:var(--orange);}
+.tile[data-accent=purple]{--ac:var(--purple);}
 .tile>*{position:relative;}
 @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
 
@@ -226,7 +227,7 @@ h1 .hl{color:var(--pink);}
 .feat .col-r .cat-actions{padding-top:12px;}
 
 /* ---------- TIER STRIP ---------- */
-.rules{grid-column:span 12;display:grid;grid-template-columns:210px repeat(3,minmax(0,1fr));gap:16px;align-items:stretch;}
+.rules{grid-column:span 12;display:grid;grid-template-columns:210px repeat(var(--tn,3),minmax(0,1fr));gap:16px;align-items:stretch;}
 .rules h2{font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.25rem;line-height:1.15;align-self:center;}
 .rules h2 small{display:block;font-family:'Nunito',sans-serif;font-weight:700;font-size:.8rem;color:var(--muted);margin-top:6px;}
 .tier{padding:14px 16px;border-radius:20px;background:rgba(255,255,255,.55);border:1px solid var(--glass-edge);}
@@ -237,6 +238,7 @@ h1 .hl{color:var(--pink);}
 .tier[data-accent=orange]{--ac:var(--orange);}
 .tier[data-accent=cyan]{--ac:var(--cyan);}
 .tier[data-accent=pink]{--ac:var(--pink);}
+.tier[data-accent=purple]{--ac:var(--purple);}
 .tier::before{display:none !important;}
 
 /* idle / error messages */
@@ -382,7 +384,7 @@ input[type=file]{display:none;}
   .lb-cta-pill{margin-top:4px;}
   .feat{grid-column:1/-1;}
   .cat{grid-column:span 6;}
-  .rules{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .rules{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));}
   .rules h2{grid-column:1/-1;}
 }
 @media (max-width:640px){
@@ -882,6 +884,7 @@ function dayAbbrev(dayName){ return dayName ? (dayName.charAt(0).toUpperCase()+d
 // Reconstructs a human-readable tier rule string from raw tier fields
 // (the backend sends the raw values, not a pre-formatted label).
 function ruleText(cat){
+  if(cat.femaleOnly) return 'Women only · all DUPR levels';
   if(cat.tierMin!=null && cat.tierMax!=null)
     return 'DUPR '+Number(cat.tierMin).toFixed(3)+(cat.tierStrictMax?' to below ':' to ')+Number(cat.tierMax).toFixed(3);
   if(cat.tierMax!=null && cat.tierMin==null)
@@ -1106,12 +1109,12 @@ function renderCards(){
   });
 
   // ---- tier strip (derived from live tier rules) ----
-  const tiers=[['New Bee','newbee_','lime'],['Action Bee','action_','orange'],['Stinger Bee','stinger_','cyan']]
+  const tiers=[['New Bee','newbee_','lime'],['Action Bee','action_','orange'],['Stinger Bee','stinger_','cyan'],['Queen Bees','queen_','pink']]
     .map(t=>{ const k=keys.find(x=>x.indexOf(t[1])===0); return k?{name:t[0],accent:t[2],rule:ruleText(cats[k])}:null; })
     .filter(Boolean);
   if(tiers.length){
     const strip=document.createElement('div');
-    strip.className='tile rules';
+    strip.className='tile rules'; strip.style.setProperty('--tn',tiers.length);
     strip.innerHTML=`<h2>Which Bee are you?<small>Play in your tier, or step up to a higher one.</small></h2>`
       + tiers.map(t=>`<div class="tier" data-accent="${t.accent}"><b><i></i>${esc(t.name)}</b><p>${esc(t.rule)}</p></div>`).join('');
     grid.appendChild(strip);
@@ -1318,9 +1321,10 @@ function buildFields(c){
     <div class="field">
       <label>Gender</label>
       <div class="seg" id="segGender">
-        <button type="button" data-c="cyan" onclick="pick(this,'gender','M')">Male</button>
-        <button type="button" data-c="pink" onclick="pick(this,'gender','F')">Female</button>
+        ${c.femaleOnly?'':`<button type="button" data-c="cyan" onclick="pick(this,'gender','M')">Male</button>`}
+        <button type="button" data-c="pink" onclick="pick(this,'gender','F')" ${c.femaleOnly?'class="sel"':''}>Female</button>
       </div>
+      ${c.femaleOnly?'<div class="dupr-hint">Queen Bees is for women only.</div>':''}
     </div>`;
   if(c.type !== 'singles'){
     html += `
@@ -1345,8 +1349,8 @@ function buildFields(c){
     <div class="field">
       <label>Partner's Gender</label>
       <div class="seg" id="segPartnerGender">
-        <button type="button" data-c="cyan" onclick="pick(this,'partnerGender','M')">Male</button>
-        <button type="button" data-c="pink" onclick="pick(this,'partnerGender','F')">Female</button>
+        ${c.femaleOnly?'':`<button type="button" data-c="cyan" onclick="pick(this,'partnerGender','M')">Male</button>`}
+        <button type="button" data-c="pink" onclick="pick(this,'partnerGender','F')" ${c.femaleOnly?'class="sel"':''}>Female</button>
       </div>
     </div>
     <div class="field">
@@ -1372,6 +1376,7 @@ function buildFields(c){
       </label>
     </div>`;
   box.innerHTML = html;
+  if(c.femaleOnly){ form.gender='F'; if(c.type!=='singles') form.partnerGender='F'; } // women only: locked to Female
 }
 
 /* ---- field handlers ---- */
