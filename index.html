@@ -1890,7 +1890,7 @@ function liveMatchCard(c,m,isNext,cls){
   const id=c.key+'|'+m.id;
   const hit=liveHit(m.aName,m.bName);
   return '<div class="'+cls+(isNext?' next':'')+(hit?' hit':'')+(LIVE.flash.has(id)?' flash':'')+'">'
-    +'<div class="m-meta"><span class="m-time">'+esc(m.time||'')+'</span><span class="m-court">'+esc(m.court||'')+'</span>'+(cls==='mrow'?'<span class="m-stage">'+esc(liveStageLabel(m))+'</span>':'')
+    +'<div class="m-meta"><span class="m-court">'+esc(m.court||'')+'</span>'+(cls==='mrow'?'<span class="m-stage">'+esc(liveStageLabel(m))+'</span>':'')
     +(isNext?'<span class="m-next">NEXT UP</span>':'')+'</div>'
     +liveTeamRow(m.aName,m.aReady,m.scoreA,m.done,aWin,bWin)
     +liveTeamRow(m.bName,m.bReady,m.scoreB,m.done,bWin,aWin)
