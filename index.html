@@ -649,6 +649,51 @@ input[type=file]{display:none;}
 const BACKEND_URL = "https://script.google.com/macros/s/AKfycbzeZaUXvfqsA1oVqwwnSxdn_JJrYnCJQ5-3vA0-TCJSjMZUP2tRMEl-PawqlxZ5opGbXg/exec";
 
 /* ============================================================
+   DATA SOURCE SWITCH  (Phase 3 of the move to Supabase)
+   'sheets'   = Apps Script, exactly as before (the default for now)
+   'supabase' = read-only data from Supabase. If Supabase fails for any
+                reason the page quietly falls back to Apps Script.
+   To test without affecting players, open the page with ?source=supabase
+   (or ?source=sheets to force the old source).
+   Writes (registration and payment slips) always go to Apps Script for now.
+   The publishable key below is meant to sit in a web page: it can only
+   call the public read functions, every table is closed to it.
+   ============================================================ */
+const DATA_SOURCE_DEFAULT = 'sheets';
+const SUPABASE_URL = 'https://neubnmwtxnsdzlhmvvkr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_JCaPkfKq4nk5dqW_xYv9bw_EKs0JOau';
+const DATA_SOURCE = (()=>{
+  try{ const q=new URLSearchParams(location.search).get('source'); if(q==='supabase'||q==='sheets') return q; }catch(e){}
+  return DATA_SOURCE_DEFAULT;
+})();
+async function sbRpc(fn, args, signal){
+  const res = await fetch(SUPABASE_URL+'/rest/v1/rpc/'+fn, {method:'POST', signal:signal,
+    headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'}, body:JSON.stringify(args||{})});
+  if(!res.ok) throw new Error('Supabase HTTP '+res.status);
+  const data = await res.json();
+  if(!data || data.ok===false) throw new Error((data&&data.error)||'Supabase returned no data');
+  return data;
+}
+// Read with fallback: Supabase first when selected, Apps Script otherwise or if Supabase fails.
+async function readData(sbFn, sbArgs, sheetUrl, signal){
+  if(DATA_SOURCE==='supabase'){
+    try{ return await sbRpc(sbFn, sbArgs, signal); }
+    catch(e){ if(e&&e.name==='AbortError') throw e; console.warn('[data] Supabase failed, using Apps Script:', e&&e.message); }
+  }
+  const res = await fetch(sheetUrl, signal?{signal:signal}:undefined);
+  return await res.json();
+}
+// Small corner tag while testing, so it is obvious which source a page is showing.
+if(DATA_SOURCE==='supabase'){
+  window.addEventListener('DOMContentLoaded',()=>{
+    const t=document.createElement('div'); t.textContent='Data: Supabase (test)';
+    t.style.cssText='position:fixed;left:10px;bottom:10px;z-index:99;font:700 11px Nunito,sans-serif;background:#1c2a1f;color:#a8d600;padding:5px 9px;border-radius:9px;opacity:.85;pointer-events:none';
+    document.body.appendChild(t);
+  });
+}
+// The live board also stays on Apps Script until its Supabase version is built.
+
+/* ============================================================
    FIREWORKS — Week 21 only (National Pickleball Day celebration).
    Continuous, full-page, brand-colored particle bursts behind all
    content. Auto-expires the moment WEEK !== 21 — nothing to turn
@@ -907,9 +952,8 @@ async function loadSlots(){
   const ctrl = new AbortController();
   const timer = setTimeout(()=>ctrl.abort(), 20000);
   try{
-    const res = await fetch(BACKEND_URL, {signal: ctrl.signal});
+    const data = await readData('open_events', {}, BACKEND_URL, ctrl.signal);
     clearTimeout(timer);
-    const data = await res.json();
     // The server answers with {ok:false,error} on failure - never render that as an empty page
     if(!data || data.ok===false || !data.categories) throw new Error((data&&data.error)||'Unexpected response from the server');
     WEEK = data.week;
@@ -1015,8 +1059,7 @@ function renderHeroChips(data){
 }
 async function loadLeaderboard(){
   try{
-    const res = await fetch(BACKEND_URL+'?action=leaderboard');
-    const data = await res.json();
+    const data = await readData('leaderboard_public', {}, BACKEND_URL+'?action=leaderboard');
     renderLeaderboard(data);
   }catch(e){ renderLeaderboard({ok:true,girls:[],boys:[]}); }
 }
@@ -1242,8 +1285,8 @@ function closeWpDrawer(){
 async function fetchWhoPlaying(key){
   const body = document.getElementById('wpDrawerBody');
   try{
-    const res = await fetch(BACKEND_URL+'?action=whoPlaying&week='+WEEK+'&category='+key);
-    const data = await res.json();
+    const data = await readData('who_playing', {p_week:WEEK, p_category:key},
+      BACKEND_URL+'?action=whoPlaying&week='+WEEK+'&category='+key);
     if(!data.ok){ body.innerHTML = '<div class="lb-empty">Could not load right now.</div>'; return; }
 
     const slotLine = `<div class="wp-slotcount"><b>${data.filled}</b> / ${data.limit} filled</div>`;
@@ -1424,8 +1467,7 @@ function enterNext(event,el){
    ============================================================ */
 async function loadPlayerDirectory(){
   try{
-    const res=await fetch(BACKEND_URL+'?action=playerDirectory');
-    const data=await res.json();
+    const data=await readData('player_directory', {}, BACKEND_URL+'?action=playerDirectory');
     if(data&&data.ok&&Array.isArray(data.players)) PLAYER_DIRECTORY=data.players;
   }catch(e){ /* silent — autocomplete is a convenience, not a requirement */ }
 }
