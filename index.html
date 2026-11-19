@@ -691,7 +691,7 @@ if(DATA_SOURCE==='supabase'){
     document.body.appendChild(t);
   });
 }
-// The live board also stays on Apps Script until its Supabase version is built.
+// The live board reads live_board() on Supabase the same way (same JSON as ?action=live).
 
 /* ============================================================
    FIREWORKS — Week 21 only (National Pickleball Day celebration).
@@ -1784,8 +1784,7 @@ async function loadLive(){
   if(LIVE.busy) return; LIVE.busy=true;
   const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),15000);
   try{
-    const res=await fetch(BACKEND_URL+'?action=live',{signal:ctrl.signal});
-    const data=await res.json();
+    const data=await readData('live_board',{},BACKEND_URL+'?action=live',ctrl.signal);
     if(!data||data.ok!==true) throw new Error((data&&data.error)||'No data');
     const first=!LIVE.data;
     // flag matches whose score or teams changed since the last poll
