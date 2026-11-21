@@ -1766,6 +1766,9 @@ function liveTimeMin(t){
   const m=/^(\d{1,2}):(\d{2})\s*([AP])M$/i.exec(String(t||'').trim()); if(!m) return 0;
   let h=Number(m[1])%12; if(/p/i.test(m[3])) h+=12; return h*60+Number(m[2]);
 }
+// A match after midnight (12:30 AM) belongs at the end of the night, not the start. Anything clearly
+// earlier than the event's own start time is counted as the next day.
+function liveTimeIn(c,t){ const m=liveTimeMin(t), s=Number(c&&c.startMin)||0; return (s&&m<s-120)?m+1440:m; }
 function liveStageLabel(m){
   if(m.stage==='group') return m.group||'Group';
   return ({qf:'Quarter-final',sf:'Semi-final',final:'Final',final1:'Final 1',final2:'Final 2',consolation:'Consolation'})[m.stage]||m.stage;
@@ -1940,7 +1943,7 @@ function liveMatchCard(c,m,isNext,cls){
 function liveNextSet(c){
   // first unplayed match on each court (both teams known) is "next up"
   const set=new Set(), seen={};
-  c.matches.slice().sort((a,b)=>liveTimeMin(a.time)-liveTimeMin(b.time)).forEach(m=>{
+  c.matches.slice().sort((a,b)=>liveTimeIn(c,a.time)-liveTimeIn(c,b.time)).forEach(m=>{
     if(m.done||seen[m.court]) return;
     seen[m.court]=1; if(m.aReady&&m.bReady) set.add(m.id);
   });
@@ -1948,7 +1951,7 @@ function liveNextSet(c){
 }
 function liveMatchesHtml(c){
   const nxt=liveNextSet(c);
-  const byTime=(a,b)=>liveTimeMin(a.time)-liveTimeMin(b.time)||(/B$/.test(a.court)?1:0)-(/B$/.test(b.court)?1:0);
+  const byTime=(a,b)=>liveTimeIn(c,a.time)-liveTimeIn(c,b.time)||(/B$/.test(a.court)?1:0)-(/B$/.test(b.court)?1:0);
   const grp=c.matches.filter(m=>m.stage==='group').sort(byTime);
   const ko=c.matches.filter(m=>m.stage!=='group').sort(byTime);
   let h='';
